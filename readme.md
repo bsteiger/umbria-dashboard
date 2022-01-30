@@ -43,3 +43,4 @@ Info for a given wallet address
   - [ ] Single Network | All networks
   - [ ] Per Asset
     - [ ] If subgroup available break into bridge side
+- [ ]  Liquidity provided vs. earned (Stacked bar graph?)
