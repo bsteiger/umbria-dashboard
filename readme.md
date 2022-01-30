@@ -1,5 +1,3 @@
-# Info to show
-
 # TODO
 
 - [x] Determine info to show
@@ -11,7 +9,8 @@
 
 ## Umbria Stats
 
-Info for the protocol. No individual wallet info.
+Info for the protocol. No individual wallet info.  
+_\*should provide 24h 7d, 30d averages_
 
 - [ ] Current UMBR Price
 - [ ] Umbr Price history
@@ -27,7 +26,6 @@ Info for the protocol. No individual wallet info.
   - [ ] TVL
   - [ ] Incoming Bridge Volume\*
   - [ ] APY\*
-  - \* Should provide 24h 7d, 30d averages
 - [ ] Graphs
   - [ ] For a given network/bridge/asset
     - [ ] Plot one of the following:
