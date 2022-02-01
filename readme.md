@@ -1,7 +1,7 @@
 # TODO
 
 - [x] Determine info to show
-- [ ] Django or React.js?
+- [x] Django or React.js?
 - [ ] Basic page layout
 - [ ] Implement
 
@@ -14,7 +14,9 @@ _\*should provide 24h 7d, 30d averages_
 
 - [ ] Current UMBR Price
 - [ ] Umbr Price history
-- [ ] Bridge APYs
+- [x] Bridge APYs
+  - [ ] Bar Graph grouped by network
+  - [ ] Table
 - [ ] UMBR APY Breakdown
   - [ ] Pie Charts for each network
     - [ ] Pie chart title total UMBR APY
@@ -43,4 +45,4 @@ Info for a given wallet address
   - [ ] Single Network | All networks
   - [ ] Per Asset
     - [ ] If subgroup available break into bridge side
-- [ ]  Liquidity provided vs. earned (Stacked bar graph?)
+- [ ] Liquidity provided vs. earned (Stacked bar graph?)
