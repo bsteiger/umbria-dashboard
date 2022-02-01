@@ -26,9 +26,6 @@ class AllNetworksAllApys extends Component {
 const BridgeApyCard = (props) => {
 	const { bridgeData, network } = props;
 
-	console.log(`Making a bridge APY Card for ${network}`);
-	// console.log(bridgeData);
-
 	return (
 		<div className="col">
 			<div className="card">
@@ -38,7 +35,7 @@ const BridgeApyCard = (props) => {
 						<div key={pool.asset + pool.bridge}>
 							<span>{pool.asset}</span>
 							<div style={{ fontSize: ".75rem" }}>
-								{pool.bridge ? `(${BRIDGEDISPLAYNAMES[pool.bridge]})` : ""}
+								{pool.bridge ? `${BRIDGEDISPLAYNAMES[pool.bridge]}` : ""}
 							</div>
 							<pre>{(pool.apy * 100).toFixed(1)}%</pre>
 						</div>

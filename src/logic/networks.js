@@ -1,4 +1,4 @@
-const network = (displayName, apiName, nativeAddress) => {
+const Network = (displayName, apiName, nativeAddress) => {
 	return {
 		displayName,
 		apiName,
@@ -18,16 +18,16 @@ export const NATIVEADDRESSES = {
 };
 
 export const BRIDGEDISPLAYNAMES = {
-	ethavax: "Ethereum<->Avalanche",
-	ethmatic: "Ethereum<->Matic",
-	ethbsc: "Ethereum<->BSC",
+	ethavax: "Ethereum ↔ Avalanche",
+	ethmatic: "Ethereum ↔ Matic",
+	ethbsc: "Ethereum ↔ Binance Smart Chain",
 };
 
 const NETWORKS = [
-	network("Ethereum", "ethereum", NATIVEADDRESSES.ethereum),
-	network("Polygon", "matic", NATIVEADDRESSES.matic),
-	network("Avalanche", "avax", NATIVEADDRESSES.avax),
-	network(
+	new Network("Ethereum", "ethereum", NATIVEADDRESSES.ethereum),
+	new Network("Polygon", "matic", NATIVEADDRESSES.matic),
+	new Network("Avalanche", "avax", NATIVEADDRESSES.avax),
+	new Network(
 		"Binance Smart Chain",
 		"binancesmartchain",
 		NATIVEADDRESSES.binancesmartchain

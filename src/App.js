@@ -6,6 +6,7 @@ import NavBar from "./components/navbar.jsx";
 import networks from "./logic/networks";
 import UmbriaApi from "./logic/umbr";
 import AllNetworksAllApys from "./components/allNetworksAllApys";
+import CoinGecko from "./logic/coingecko";
 
 class App extends Component {
 	state = {
@@ -15,6 +16,12 @@ class App extends Component {
 	};
 
 	umbriaApi = new UmbriaApi();
+	coingecko = new CoinGecko();
+
+	async getCurrentUmbrPrice() {
+		console.log(`app.getCurrentUmbrPrice()`);
+		return await this.coingecko.getPriceBySymbol("umbr");
+	}
 
 	constructor() {
 		super();
@@ -26,7 +33,7 @@ class App extends Component {
 		// Bridges available (or hard code this)
 		// Calls to:
 
-		this.setState({ umbrPrice: 4.2 }); // TODO: Pull this using an api
+		this.setState({ umbrPrice: await this.getCurrentUmbrPrice() }); // TODO: Pull this using an api
 		this.setState({ networks });
 		this.setState({ selectedNetwork: "ethereum" });
 
