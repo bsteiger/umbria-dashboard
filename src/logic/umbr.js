@@ -3,9 +3,14 @@ import NETWORKS from "./networks";
 export default class UmbriaApi {
 	baseUrl = "https://bridgeapi.umbria.network";
 
-	/** Internal method to do the api fetch and handle errors (eventually) */
+	/** Internal method to do the api fetch and handle errors (eventually)
+	 *
+	 * @param {str} endpoint
+	 * @returns {Promise.<object>} json object
+	 */
 	async _apiFetch(endpoint) {
 		let response = await fetch(endpoint);
+		console.log(response);
 		let json = await response.json();
 		return json;
 	}
@@ -86,6 +91,30 @@ export default class UmbriaApi {
 		return await this._apiFetch(endpoint);
 	}
 
+	/**Get Average bridge volume over timeSince to now for all
+	 * assets on a single network side of a bridge
+	 *
+	 * @param {str} network - Network name eg. matic, ethereum
+	 * @param {int} timeSince - EpochTime in Seconds
+	 */
+	async getAvgBridgeVolumeAll(network, timeSince) {
+		const endpoint = `${this.baseUrl}/api/bridge/getAvgBridgeVolumeAll/?network=${network}&timeSince=${timeSince}`;
+		let avgBridgeVolumeAll = await this._apiFetch(endpoint);
+		let result = avgBridgeVolumeAll.result;
+		return formatBridgeVolData(result);
+	}
+
+	async getAvgBridgeVolumesAllNetworks(timeSince) {
+		let data = {};
+		for (let n of NETWORKS) {
+			let network = n.apiName;
+			let bridgeVolume = await this.getAvgBridgeVolumeAll(network, timeSince);
+			data[network] = bridgeVolume;
+		}
+
+		return data;
+	}
+
 	async getAllNetworksApy() {
 		let allApys = NETWORKS.map((network) => {
 			const apys = this.getAPYAllBridgeRoutes(network.apiName);
@@ -110,4 +139,34 @@ export default class UmbriaApi {
 		}
 		return outputdata;
 	}
+}
+
+/** Swaps property name of an object
+ *
+ * @param {Object} o
+ * @param {str} oldProp
+ * @param {str} newProp
+ */
+function swapProp(o, oldProp, newProp) {
+	// don't do anything if the old prop is undefined
+	if (o[oldProp] == null) return o;
+
+	// Don't overwrite a prop that already exists
+	if (!!o[newProp]) return o;
+
+	o[newProp] = o[oldProp];
+	delete o[oldProp];
+	return o;
+}
+
+/** Formats result from getAvgBridgeVolAll to align with standard formats */
+function formatBridgeVolData(data) {
+	let formatted = data;
+	formatted = swapProp(formatted, "ether", "ETH");
+	formatted = swapProp(formatted, "ghost", "GHST");
+	formatted = swapProp(formatted, "tether", "USDT");
+	formatted = swapProp(formatted, "umbria", "UMBR");
+	formatted = swapProp(formatted, "usdc", "USDC");
+	formatted = swapProp(formatted, "wbtc", "WBTC");
+	return formatted;
 }

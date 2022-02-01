@@ -29,7 +29,7 @@ const BridgeApyCard = (props) => {
 	return (
 		<div className="col">
 			<div className="card">
-				<h6 className="card-body">{network}</h6>
+				<h6 className="card-body">{network} Network</h6>
 				{bridgeData.map((pool) => {
 					return (
 						<div key={pool.asset + pool.bridge}>
@@ -37,7 +37,7 @@ const BridgeApyCard = (props) => {
 							<div style={{ fontSize: ".75rem" }}>
 								{pool.bridge ? `${BRIDGEDISPLAYNAMES[pool.bridge]}` : ""}
 							</div>
-							<pre>{(pool.apy * 100).toFixed(1)}%</pre>
+							<pre>{(pool.apy * 100).toFixed(1)}% APY</pre>
 						</div>
 					);
 				})}
