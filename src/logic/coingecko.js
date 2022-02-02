@@ -37,7 +37,7 @@ class CoinGecko {
 		const endpoint = `${this.baseUrl}coins/${id}`;
 		const resp = await _fetch(endpoint);
 		const json = await resp.json();
-		const price = json.market_data.current_price[this.currency];
+		const price = +json.market_data.current_price[this.currency];
 		return price;
 	}
 

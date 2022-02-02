@@ -18,6 +18,11 @@ export function getDateMinus({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
 	return new Date(now - milliseconds({ days, hrs, mins, secs }));
 }
 
+/**  Returns Epoch Time of current date minus given amounts*/
+export function getEpochMinus({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
+	return dateToEpochTime(getDateMinus({ days, hrs, mins, secs }));
+}
+
 function milliseconds({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
 	return (
 		days * 24 * 60 * 60 * 1000 +
