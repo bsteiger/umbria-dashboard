@@ -21,4 +21,5 @@ yarn-debug.log*
 yarn-error.log*
 
 /temp
-.swp
+*.swp
+src/*.swp
