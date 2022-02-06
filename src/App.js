@@ -29,23 +29,6 @@ class App extends Component {
     return await this.coingecko.getPriceById("umbra-network");
   }
 
-  constructor() {
-    super();
-    console.log("App -- Constructed");
-  }
-
-  async componentDidMount() {
-    // when the app mounts, get the following info from the api(s)
-    // Bridges available (or hard code this)
-    // Calls to:
-    // this.setState({ umbrPrice: await this.getCurrentUmbrPrice() });
-    // this.setState({ networks });
-    // this.setState({ selectedNetwork: "ethereum" });
-    // this.setState({
-    //   allNetworksApys: await this.umbriaApi.getAllNetworksApy(),
-    //});
-  }
-
   render() {
     return (
       <div className="App">
