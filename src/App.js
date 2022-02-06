@@ -12,6 +12,7 @@ import Error404 from "./components/error404";
 import Main from "./components/home";
 import BarChart from "./components/chartTest";
 import BridgeVolumeAll from "./dashboards/bridgeVolume/bridgeVolumeAll";
+import Test from "./components/Test";
 
 class App extends Component {
   state = {
@@ -37,9 +38,9 @@ class App extends Component {
           <Route path={"/chartTest/Donut"} exact component={BarChart} />
           <Route path={"/"} exact component={Main} />
           <Route path={"/network/bridgevolume/"} component={BridgeVolumeAll} />
+          <Route path={"/test"} component={Test}></Route>
           {/* <Route path={"/bridge/apys"} exact component={Apys} /> */}
           {/* <Route path={"/bridge"} exact component={Main} /> */}
-
           {/* <Route path={"/wallet/:address"}  component={} /> */}
           <Route path={"/error404"} exact component={Error404} />
           <Redirect to={"/error404"} />
