@@ -16,13 +16,26 @@ export default function BridgeVolumeAll() {
   }
 
   useEffect(() => {
-    console.log("Running Use Effect");
+    // console.log("Running Use Effect");
     const getUmbrData = async () => {
       console.log("getting Umbr Data");
       const umbr = new UmbriaApi();
       const networks = await umbr.getAllNetworks();
       setNetworks(networks);
-      console.log(networks);
+      const avg1d = await umbr.getAvgBridgeVolumesAllNetworks(
+        getEpochMinus({ days: 1 })
+      );
+      const avg7d = await umbr.getAvgBridgeVolumesAllNetworks(
+        getEpochMinus({ days: 7 })
+      );
+      const avg14d = await umbr.getAvgBridgeVolumesAllNetworks(
+        getEpochMinus({ days: 14 })
+      );
+      const avg30d = await umbr.getAvgBridgeVolumesAllNetworks(
+        getEpochMinus({ days: 30 })
+      );
+      await Promise.all([avg1d, avg7d, avg14d, avg30d]);
+      setBridgeData({ avg1d, avg14d, avg30d });
     };
     getUmbrData();
   }, []);
@@ -51,7 +64,15 @@ export default function BridgeVolumeAll() {
   function BridgeVolumeOverTime() {
     return (
       <div className="plot">
-        Plot for {selectedNetwork} goes here <BridgeVolOverTimeChart />
+        <BridgeVolOverTimeChart
+          title={
+            selectedNetwork
+              ? `Data for ${selectedNetwork}`
+              : "Please select a network"
+          }
+          bridgeData={bridgeData}
+          network={selectedNetwork}
+        />
       </div>
     );
   }
