@@ -1,5 +1,6 @@
 import Chart from "react-apexcharts";
 import React, { useEffect, useState } from "react";
+import _ from "lodash";
 
 export default function lineChart({ data, title }) {
   const defaultOptions = {
@@ -13,8 +14,12 @@ export default function lineChart({ data, title }) {
     dataLabels: {
       enabled: false,
     },
+    markers: {
+      size: 3,
+    },
     stroke: {
-      curve: "straight",
+      curve: "smooth",
+      width: 3,
     },
     title: {
       text: title,
@@ -27,7 +32,7 @@ export default function lineChart({ data, title }) {
       },
     },
     xaxis: {
-      categories: [],
+      categories: ["30d", "14d", "7d", "1d"],
     },
   };
 
@@ -35,6 +40,8 @@ export default function lineChart({ data, title }) {
   const [options, setOptions] = useState(defaultOptions);
 
   useEffect(() => {
+    if (!data) return;
+    console.log(data);
     setSeries(data ? data : []);
   }, []);
 

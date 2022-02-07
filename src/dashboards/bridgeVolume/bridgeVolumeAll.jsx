@@ -1,65 +1,29 @@
 import React, { useEffect, useState } from "react";
 import "./bridgeVolumeAll.css";
-import UmbriaApi from "../../logic/umbr";
+// import UmbriaApi from "../../logic/umbr";
+import umbria from "./umbria";
 import { getEpochMinus } from "../../../src/logic/utils";
 import BridgeVolOverTimeChart from "./bridgeVolOverTime";
+import _ from "lodash";
 
 export default function BridgeVolumeAll() {
-  const [bridgeData, setBridgeData] = useState({});
+  const [bridgeData, setBridgeData] = useState([]);
   const [networks, setNetworks] = useState([]);
   const [selectedBridge, setSelectedBridge] = useState("");
   const [selectedNetwork, setselectedNetwork] = useState("");
 
-  function handleNetworkSelect(value) {
-    console.log("SWITCH!", value);
-    setselectedNetwork(value);
-  }
-
   useEffect(() => {
-    // console.log("Running Use Effect");
     const getUmbrData = async () => {
-      console.log("getting Umbr Data");
-      const umbr = new UmbriaApi();
-      const networks = await umbr.getAllNetworks();
-      setNetworks(networks);
-      const avg1d = await umbr.getAvgBridgeVolumesAllNetworks(
-        getEpochMinus({ days: 1 })
-      );
-      const avg7d = await umbr.getAvgBridgeVolumesAllNetworks(
-        getEpochMinus({ days: 7 })
-      );
-      const avg14d = await umbr.getAvgBridgeVolumesAllNetworks(
-        getEpochMinus({ days: 14 })
-      );
-      const avg30d = await umbr.getAvgBridgeVolumesAllNetworks(
-        getEpochMinus({ days: 30 })
-      );
-      await Promise.all([avg1d, avg7d, avg14d, avg30d]);
-      setBridgeData({ avg1d, avg14d, avg30d });
+      console.log("getUmbrData");
+      setNetworks(await umbria.getNetworks());
+      setBridgeData(await umbria.getBridgeData());
     };
     getUmbrData();
   }, []);
 
-  //
-  //
-  //
-  // const avg1d = umbr.getAvgBridgeVolumesAllNetworks(
-  //   getEpochMinus({ days: 1 })
-  // );
-  // const avg7d = umbr.getAvgBridgeVolumesAllNetworks(
-  //   getEpochMinus({ days: 7 })
-  // );
-  // await Promise.all([avg1d, avg7d]);
-  //   const avg14d = await umbr.getAvgBridgeVolumesAllNetworks(
-  //     getEpochMinus({ days: 14 })
-  //   );
-  //   const avg30d = await umbr.getAvgBridgeVolumesAllNetworks(
-  //     getEpochMinus({ days: 30 })
-  //   );
-  // setBridgeData({ bridgeData: { avg1d, avg14d, avg30d } });
-  // console.log("got Umbr Data");
-  // };
-  // }
+  function handleNetworkSelect(value) {
+    setselectedNetwork(value);
+  }
 
   function BridgeVolumeOverTime() {
     return (
@@ -70,18 +34,37 @@ export default function BridgeVolumeAll() {
               ? `Data for ${selectedNetwork}`
               : "Please select a network"
           }
-          bridgeData={bridgeData}
+          data={bridgeDataToPlot()}
           network={selectedNetwork}
+          asset={"ETH"}
         />
       </div>
     );
+  }
+
+  function bridgeDataToPlot() {
+    if (!bridgeData.length) return;
+    console.log(bridgeData);
+    let asset = "ETH";
+    let plots = [];
+    for (let data of bridgeData.filter((o) => o.asset === asset)) {
+      plots = [
+        ...plots,
+        {
+          // data: _.zip(data.days, data.avgVols),
+          data: data.avgVols,
+          name: `${data.asset} (${data.network})`,
+        },
+      ];
+    }
+    return plots;
   }
 
   /** --- Main Render --- */
   return (
     <div>
       <div className="container">
-        <h3 className="title">Bridge Volume</h3>
+        <h3 className="title">Average Bridge Volume</h3>
         <NetworksSelector onChange={handleNetworkSelect} networks={networks} />
         <BridgeVolumeOverTime />
       </div>

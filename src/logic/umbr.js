@@ -1,5 +1,5 @@
 import NETWORKS from "./networks";
-import { getEpochMinus } from "./utils";
+import { convertFromWei, getEpochMinus } from "./utils";
 import httpService from "../services/httpService";
 
 const http = {
@@ -12,18 +12,12 @@ const http = {
 export default class UmbriaApi {
   baseUrl = "https://bridgeapi.umbria.network";
   networks = NETWORKS;
-  /** Internal method to do the api fetch and handle errors (eventually)
-   *
-   * @param {str} endpoint
-   * @returns {Promise.<object>} json object
-   */
 
-  /** Returns a list of all network names used by the umbria api
-   *
-   * @returns {Object[]} Array[{displayName, apiName, nativeAddress}])
-   */
   async getAllNetworks() {
     // no API endpoint exists for this. hardcoded response for now.
+    if (!this.networks) {
+      this.networks = await Promise.resolve(this.networks);
+    }
     return this.networks;
   }
 
@@ -103,27 +97,26 @@ export default class UmbriaApi {
     return await http.get(endpoint);
   }
 
-  /**Get Average bridge volume over timeSince to now for all
+  /**Get total bridge volume from timeSince to now for all
    * assets on a single network side of a bridge
    *
    * @param {str} network - Network name eg. matic, ethereum
    * @param {int} timeSince - EpochTime in Seconds
    */
-  async getAvgBridgeVolumeAll(network, timeSince) {
+  async getBridgeVolumeAll(network, timeSince) {
     if (!timeSince) timeSince = getEpochMinus({ days: 1 });
     const endpoint = `${this.baseUrl}/api/bridge/getAvgBridgeVolumeAll/?network=${network}&timeSince=${timeSince}`;
     let avgBridgeVolumeAll = await http.get(endpoint);
     return formatBridgeVolData(avgBridgeVolumeAll);
   }
 
-  async getAvgBridgeVolumesAllNetworks(timeSince) {
+  async getAvgBridgeVolumesAllNetworks({ timeSince }) {
     let data = {};
     for (let n of NETWORKS) {
       let network = n.apiName;
-      let bridgeVolume = await this.getAvgBridgeVolumeAll(network, timeSince);
+      let bridgeVolume = await this.getBridgeVolumeAll(network, timeSince);
       data[network] = bridgeVolume;
     }
-
     return data;
   }
 
@@ -171,7 +164,7 @@ function swapProp(o, oldProp, newProp) {
   return o;
 }
 
-/** Formats result from getAvgBridgeVolAll to align with standard formats */
+/** Formats result from getAvgBridgeVolAll endpoint to align with standard formats */
 function formatBridgeVolData(data) {
   let formatted = data;
   formatted = swapProp(formatted, "ether", "ETH");
@@ -180,5 +173,9 @@ function formatBridgeVolData(data) {
   formatted = swapProp(formatted, "umbria", "UMBR");
   formatted = swapProp(formatted, "usdc", "USDC");
   formatted = swapProp(formatted, "wbtc", "WBTC");
+
+  Object.entries(formatted).map(
+    ([k, v]) => (formatted[k] = convertFromWei(+v))
+  );
   return formatted;
 }
