@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./bridgeVolumeAll.css";
 import UmbriaApi from "../../logic/umbr";
 import { getEpochMinus } from "../../../src/logic/utils";
-import LineChart from "./lineChart";
+import BridgeVolOverTimeChart from "./bridgeVolOverTime";
 
 export default function BridgeVolumeAll() {
   const [bridgeData, setBridgeData] = useState({});
@@ -49,7 +49,11 @@ export default function BridgeVolumeAll() {
   // }
 
   function BridgeVolumeOverTime() {
-    return <div className="plot">Plot for {selectedNetwork} goes here</div>;
+    return (
+      <div className="plot">
+        Plot for {selectedNetwork} goes here <BridgeVolOverTimeChart />
+      </div>
+    );
   }
 
   /** --- Main Render --- */
@@ -59,7 +63,6 @@ export default function BridgeVolumeAll() {
         <h3 className="title">Bridge Volume</h3>
         <NetworksSelector onChange={handleNetworkSelect} networks={networks} />
         <BridgeVolumeOverTime />
-        <LineChart className="linechart" />
       </div>
     </div>
   );
