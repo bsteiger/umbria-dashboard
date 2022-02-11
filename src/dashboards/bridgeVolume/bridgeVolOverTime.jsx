@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 
 export default function lineChart({ data, title }) {
+  const type = "line";
   const defaultOptions = {
     chart: {
       height: 350,
-      type: "line",
       zoom: {
         enabled: false,
       },
@@ -49,7 +49,7 @@ export default function lineChart({ data, title }) {
     <Chart
       options={options}
       series={series}
-      type="line"
+      type={type}
       // width={500}
       height={"320"}
     />

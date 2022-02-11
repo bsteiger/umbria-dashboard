@@ -53,7 +53,6 @@ function formatBridgeData(data) {
         (o) => o.network === network && o.asset === asset
       );
       if (!entry.length) continue;
-      console.log(entry);
       newEntries = [
         ...newEntries,
         {
