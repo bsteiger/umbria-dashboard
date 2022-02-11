@@ -1,14 +1,10 @@
 import NETWORKS, { BRIDGEDISPLAYNAMES } from "../constants/networks";
 import { convertFromWei, getEpochMinus } from "./utils";
 import httpService from "../services/httpService";
-import axios from "axios";
 
 const http = {
   get: async (endpoint) => {
-    console.log("get", endpoint);
-    // const resp = await httpService.get(endpoint);
-    let resp = await axios.get(endpoint);
-    console.log(resp);
+    const resp = await httpService.get(endpoint);
     return resp.data;
   },
 };
@@ -98,7 +94,8 @@ export default class UmbriaApi {
     const endpoint =
       `${this.baseUrl}/api/pool/getAPYAllBridgeRoutes/` +
       `?&network=${network}`;
-    return await http.get(endpoint);
+    const data = await http.get(endpoint);
+    return data;
   }
 
   /**Get total bridge volume from timeSince to now for all
@@ -125,7 +122,8 @@ export default class UmbriaApi {
   }
 
   /** Get All the Apys for All Networks using the getBridgeVolumeAll endpoint
-   * Format it to array of objects with the following keys: network,bridge,asset,apy
+   *
+   * Formated to array of objects with the following keys: network,bridge,asset,apy
    * @returns {obj[]}
    */
   async getAllApysAllNetworks() {
@@ -134,7 +132,6 @@ export default class UmbriaApi {
       allApys = [...allApys, this.getAPYAllBridgeRoutes(network.apiName)];
     }
     allApys = await Promise.all(allApys);
-    console.log(allApys);
     let outputdata = [];
     let i = 0;
     for (let network of allApys) {
@@ -144,14 +141,12 @@ export default class UmbriaApi {
             network: NETWORKS[i].displayName,
             bridge: BRIDGEDISPLAYNAMES[bridge],
             asset,
-            apy: network[bridge][asset],
+            apy: +network[bridge][asset],
           });
         }
       }
       i++;
     }
-    console.log("getAllApysAllNetworks output data");
-    console.log(outputdata);
     return outputdata;
   }
 }

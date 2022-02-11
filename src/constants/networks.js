@@ -21,7 +21,7 @@ export const NATIVEADDRESSES = {
 
 export const BRIDGEDISPLAYNAMES = {
   ethavax: "Ethereum ↔ Avalanche",
-  ethmatic: "Ethereum ↔ Matic",
+  ethmatic: "Ethereum ↔ Polygon",
   ethbsc: "Ethereum ↔ Binance Smart Chain",
 };
 
