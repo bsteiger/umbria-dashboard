@@ -12,15 +12,8 @@
 Info for the protocol. No individual wallet info.  
 _\*should provide 24h 7d, 30d averages_
 
-- [ ] Current UMBR Price
+- [x] Current UMBR Price
 - [ ] Umbr Price history
-- [x] Bridge APYs
-  - [ ] Bar Graph grouped by network
-  - [ ] Table
-- [ ] UMBR APY Breakdown
-  - [ ] Pie Charts for each network
-    - [ ] Pie chart title total UMBR APY
-    - [ ] Slices contain effective APY(R?) per asset
 - [ ] Filterable APY Table
   - [ ] Network (Bridge Side)
   - [ ] Asset
@@ -28,6 +21,13 @@ _\*should provide 24h 7d, 30d averages_
   - [ ] TVL
   - [ ] Incoming Bridge Volume\*
   - [ ] APY\*
+- [x] Bridge APYs
+  - [ ] Bar Graph grouped by network
+  - [ ] Table
+- [ ] UMBR APY Breakdown
+  - [ ] Pie Charts for each network
+    - [ ] Pie chart title total UMBR APY
+    - [ ] Slices contain effective APY(R?) per asset
 - [ ] Graphs
   - [ ] For a given network/bridge/asset
     - [ ] Plot one of the following:
