@@ -3,7 +3,7 @@ import UmbrPrice from "../../components/umbrprice";
 import CoinGecko from "../../logic/coinGeckoApi";
 import UmbriaApi from "../../logic/umbriaApi";
 import AllNetworksAllApys from "../../components/allNetworksAllApys";
-
+import Table from "../../components/common/Table";
 /** Overview Dashboard Page
  *
  * Displays:
@@ -38,7 +38,12 @@ function Overview() {
             <h6 className="card-subtitle mb-2">UMBR Price</h6>
           </div>
         </div>
-        <AllNetworksAllApys data={allNetworksAllApys} />
+        <div className="card">
+          <div className="card-body">
+            <Table columns={[]} data={[]} sortColumn={} onSort={} />
+          </div>
+        </div>
+        {/* <AllNetworksAllApys data={allNetworksAllApys} /> */}
       </div>
     </div>
   );
