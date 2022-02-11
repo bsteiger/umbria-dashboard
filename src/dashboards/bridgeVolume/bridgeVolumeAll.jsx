@@ -17,7 +17,8 @@ export default function BridgeVolumeAll() {
     const getUmbrData = async () => {
       console.log("getUmbrData");
       setNetworks(await umbria.getNetworks());
-      let bridgeData = await umbria.getBridgeData();
+      if (selectedNetwork === "") setselectedNetwork(networks[0]);
+      let bridgeData = await umbria.getAvgBridgeVolData();
       setBridgeData(bridgeData);
       getAssetsFromBridgeData();
       // setAssets();

@@ -1,33 +1,38 @@
 import "../../umbria.typedefinitions";
-import UmbriaApi from "../../logic/umbr";
+import UmbriaApi from "../../logic/umbriaApi";
 import { getEpochMinus } from "../../logic/utils";
 import BridgeVolumeAll from "./bridgeVolumeAll";
 const api = new UmbriaApi();
 
 export default {
-  getBridgeData: async () => {
+  /** Gets average bridge volume for the past 30, 14, 7, and 1 days
+   *
+   *
+   */
+  getAvgBridgeVolData: async () => {
     const days = [30, 14, 7, 1];
-
     const networks = await api.getAllNetworks();
-
     let data = [];
     let promises = [];
+
     for (let n of networks) {
       for (let day of days) {
         let epoch = getEpochMinus({ days: day });
-        let fetchedData = await api.getBridgeVolumeAll(n.apiName, epoch);
+        let fetchedData = await api.getTotalBridgeVolume(n.apiName, epoch);
         promises = [...promises, fetchedData];
         data = [...data, { day: day, network: n.apiName, data: fetchedData }];
       }
     }
-    await Promise.all(promises);
+    promises = await Promise.all(promises);
     return formatBridgeData(data);
   },
+
   getNetworks: async () => {
     return api.getAllNetworks();
   },
 };
 
+//** formats and averages bridge data to represent average daily volume */
 function formatBridgeData(data) {
   let rawData = [];
   for (let entry of data) {

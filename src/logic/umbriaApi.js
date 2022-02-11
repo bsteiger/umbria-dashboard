@@ -1,11 +1,15 @@
-import NETWORKS from "./networks";
+import NETWORKS, { BRIDGEDISPLAYNAMES } from "../constants/networks";
 import { convertFromWei, getEpochMinus } from "./utils";
 import httpService from "../services/httpService";
+import axios from "axios";
 
 const http = {
   get: async (endpoint) => {
-    const resp = await httpService.get(endpoint);
-    return resp.data.result;
+    console.log("get", endpoint);
+    // const resp = await httpService.get(endpoint);
+    let resp = await axios.get(endpoint);
+    console.log(resp);
+    return resp.data;
   },
 };
 
@@ -103,11 +107,11 @@ export default class UmbriaApi {
    * @param {str} network - Network name eg. matic, ethereum
    * @param {int} timeSince - EpochTime in Seconds
    */
-  async getBridgeVolumeAll(network, timeSince) {
+  async getTotalBridgeVolume(network, timeSince) {
     if (!timeSince) timeSince = getEpochMinus({ days: 1 });
     const endpoint = `${this.baseUrl}/api/bridge/getAvgBridgeVolumeAll/?network=${network}&timeSince=${timeSince}`;
-    let avgBridgeVolumeAll = await http.get(endpoint);
-    return formatBridgeVolData(avgBridgeVolumeAll);
+    let totalBridgeVolumeAll = await http.get(endpoint);
+    return formatBridgeVolData(totalBridgeVolumeAll.result);
   }
 
   async getAvgBridgeVolumesAllNetworks({ timeSince }) {
@@ -120,13 +124,17 @@ export default class UmbriaApi {
     return data;
   }
 
-  async getAllNetworksApy() {
-    let allApys = NETWORKS.map((network) => {
-      const apys = this.getAPYAllBridgeRoutes(network.apiName);
-      return apys;
-    });
+  /** Get All the Apys for All Networks using the getBridgeVolumeAll endpoint
+   * Format it to array of objects with the following keys: network,bridge,asset,apy
+   * @returns {obj[]}
+   */
+  async getAllApysAllNetworks() {
+    let allApys = [];
+    for (let network of NETWORKS) {
+      allApys = [...allApys, this.getAPYAllBridgeRoutes(network.apiName)];
+    }
     allApys = await Promise.all(allApys);
-
+    console.log(allApys);
     let outputdata = [];
     let i = 0;
     for (let network of allApys) {
@@ -134,7 +142,7 @@ export default class UmbriaApi {
         for (let asset in network[bridge]) {
           outputdata.push({
             network: NETWORKS[i].displayName,
-            bridge,
+            bridge: BRIDGEDISPLAYNAMES[bridge],
             asset,
             apy: network[bridge][asset],
           });
@@ -142,6 +150,8 @@ export default class UmbriaApi {
       }
       i++;
     }
+    console.log("getAllApysAllNetworks output data");
+    console.log(outputdata);
     return outputdata;
   }
 }

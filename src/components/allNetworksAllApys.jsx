@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import NETWORKS, { BRIDGEDISPLAYNAMES } from "../logic/networks";
+import NETWORKS, { BRIDGEDISPLAYNAMES } from "../constants/networks";
 
 function AllNetworksAllApys({ data }) {
   if (!data) {
@@ -22,8 +22,7 @@ function AllNetworksAllApys({ data }) {
   );
 }
 
-function BridgeApyCard(props) {
-  const { bridgeData, network } = props;
+function BridgeApyCard({ bridgeData, network }) {
   return (
     <div className="col">
       <div className="card">
@@ -33,7 +32,7 @@ function BridgeApyCard(props) {
             <div key={pool.asset + pool.bridge}>
               <span>{pool.asset}</span>
               <div style={{ fontSize: ".75rem" }}>
-                {pool.bridge ? `${BRIDGEDISPLAYNAMES[pool.bridge]}` : ""}
+                {pool.bridge ? pool.bridge : ""}
               </div>
               <pre>{(pool.apy * 100).toFixed(1)}% APY</pre>
             </div>
