@@ -5,6 +5,7 @@ import styles from "./navbar.css";
 
 export default function NavBar() {
   const navLinks = [
+    { text: "Overview", route: "/" },
     { text: "Test", route: "/test" },
     { text: "Bridge Volume", route: "/network/bridgevolume/" },
     {

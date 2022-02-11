@@ -54,12 +54,7 @@ function Overview() {
             </div>
           </div>
         </div>
-        <div className="card">
-          <div className="card-body">
-            <Table columns={[]} data={[]} sortColumn={} onSort={} />
-          </div>
-        </div>
-        {/* <AllNetworksAllApys data={allNetworksAllApys} /> */}
+        <AllNetworksAllApys data={allNetworksAllApys} />
       </div>
     </div>
   );
