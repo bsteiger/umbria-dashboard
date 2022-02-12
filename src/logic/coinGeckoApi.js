@@ -14,8 +14,7 @@ class CoinGecko {
   async getCoinList() {
     console.log("Getting Coin List...");
     const endpoint = `${this.baseUrl}coins/list?include_platform=true`;
-    const resp = await _fetch(endpoint);
-    const coinList = await resp.data;
+    const coinList = await _fetch(endpoint);
     console.log("Got Coin List.", `${coinList.length} coins.`);
     return coinList;
   }

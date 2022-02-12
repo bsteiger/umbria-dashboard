@@ -1,3 +1,8 @@
+export function calculateApr() {
+  console.log("calculateApr not fully implemented.");
+  return;
+}
+
 /** format to 2 decimals */
 export function formatPrice(number) {
   return number.toFixed(2);

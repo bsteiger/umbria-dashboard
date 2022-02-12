@@ -21,15 +21,6 @@ export default class UmbriaApi {
     return this.networks;
   }
 
-  /** Get the number of liquidity providers for a particular asset on a single
-   * network */
-  async getNumParticipants(network, tokenAddress) {
-    const endpoint =
-      `${this.baseUrl}/api/pool/getNumParticipants/` +
-      `?network=${network}&tokenAddress=${tokenAddress}`;
-    return await http.get(endpoint);
-  }
-
   /** Get the APY (annual percentage yield) for all assets on a single network */
   async getApyAll(network) {
     const endpoint = `${this.baseUrl}/api/pool/getApyAll/?network=${network}`;
@@ -55,12 +46,6 @@ export default class UmbriaApi {
   /** Check the availability of the api */
   async getAvailability() {
     const endpoint = `${this.baseUrl}/api/getAvailability/?`;
-    return await http.get(endpoint);
-  }
-
-  /** Get the currenct status of a Narni Bridge transaction */
-  async getTransactionInfo(txHash) {
-    const endpoint = `${this.baseUrl}/api/bridge/getTransactionInfo/?txhash=${txHash}`;
     return await http.get(endpoint);
   }
 
@@ -109,16 +94,6 @@ export default class UmbriaApi {
     const endpoint = `${this.baseUrl}/api/bridge/getAvgBridgeVolumeAll/?network=${network}&timeSince=${timeSince}`;
     let totalBridgeVolumeAll = await http.get(endpoint);
     return formatBridgeVolData(totalBridgeVolumeAll.result);
-  }
-
-  async getAvgBridgeVolumesAllNetworks({ timeSince }) {
-    let data = {};
-    for (let n of NETWORKS) {
-      let network = n.apiName;
-      let bridgeVolume = await this.getBridgeVolumeAll(network, timeSince);
-      data[network] = bridgeVolume;
-    }
-    return data;
   }
 
   /** Get All the Apys for All Networks using the getBridgeVolumeAll endpoint
