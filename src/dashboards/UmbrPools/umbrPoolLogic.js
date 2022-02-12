@@ -5,7 +5,7 @@ import NETWORKS from "../../constants/networks";
 
 const umbria = new UmbriaApi();
 const coingecko = new CoinGecko();
-
+const currentPrices = {};
 /** Get APR Breakdown for UMBR Staking
  *
  * Does not take into account APY earnings from earned coins, so this is only APR.
@@ -27,7 +27,7 @@ export async function getUmbrPoolAprBreakdown(network, days = 1) {
 
   let aprs = {};
   for (let network of networks) {
-    const bridgeVols = umbria.getTotalBridgeVolume(network, epoch);
+    let bridgeVols = umbria.getTotalBridgeVolume(network, epoch);
     let tvls = umbria.getTvlAll(network);
     [tvls, mainNetTvls, bridgeVols] = await Promise.all([
       tvls,
@@ -42,7 +42,7 @@ export async function getUmbrPoolAprBreakdown(network, days = 1) {
       let dailyAvgBridgeVol = bridgeVols[asset] / days;
 
       // dailyReward is in native token but tvl is in USD, so convert using current price.
-      let currentPrice = await coingecko.getPriceBySymbol(asset);
+      let currentPrice = await getPriceBySymbol(asset);
       let dailyReward =
         asset === "UMBR"
           ? currentPrice * dailyAvgBridgeVol * (0.5 / 100)
@@ -60,4 +60,11 @@ export async function getUmbrPoolAprBreakdown(network, days = 1) {
     ).toFixed(2)}%`
   );
   return aprs;
+}
+
+async function getPriceBySymbol(symbol) {
+  if (currentPrices[symbol]) return currentPrices[symbol];
+  const price = await coingecko.getPriceBySymbol(symbol);
+  currentPrices[symbol] = price;
+  return price;
 }
