@@ -2,14 +2,16 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../UmbriaPretty.webp";
 import styles from "./navbar.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 export default function NavBar() {
   const navLinks = [
     { text: "Overview", route: "/" },
+    { text: "UMBR Pool Rewards", route: "/umbrPools" },
     { text: "Test", route: "/test" },
     { text: "Bridge Volume", route: "/network/bridgevolume/" },
     {
-      text: "API",
+      text: <FontAwesomeIcon icon={faBookOpen} />,
       href: "https://bridge.umbria.network/docs/docs-page.html#api-calls",
       newWindow: true,
     },

@@ -8,6 +8,7 @@ import BarChart from "./components/chartTest";
 import BridgeVolumeAll from "./dashboards/bridgeVolume/bridgeVolumeAll";
 import Test from "./components/Test";
 import Overview from "./dashboards/Overview";
+import UmbrPools from "./dashboards/UmbrPools/UmbrPools";
 
 class App extends Component {
   render() {
@@ -16,6 +17,7 @@ class App extends Component {
         <NavBar />
         <Switch>
           <Route path={"/chartTest/Donut"} exact component={BarChart} />
+          <Route path={"/umbrPools"} component={UmbrPools} />
           <Route path={"/network/bridgevolume/"} component={BridgeVolumeAll} />
           <Route path={"/test"} component={Test}></Route>
           <Route path={"/error404"} exact component={Error404} />
