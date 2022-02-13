@@ -28,6 +28,11 @@ export function getEpochMinus({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
   return dateToEpochTime(getDateMinus({ days, hrs, mins, secs }));
 }
 
+/** Formats decimal value to percent (0.39 -> 39%) */
+export function formatPercent(value, decimalPoints = 0) {
+  return `${(value * 100).toFixed(decimalPoints)}%`;
+}
+
 function milliseconds({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
   return (
     days * 24 * 60 * 60 * 1000 +

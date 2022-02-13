@@ -12,11 +12,18 @@ import {
 } from "recharts";
 import React, { useState, useEffect } from "react";
 import { getUmbrPoolAprBreakdown } from "./umbrPoolLogic";
-import TableAllApys from "../../components/TableAllApys";
 import ButtonGroup from "../../components/ButtonGroup";
+import { formatPercent } from "../../logic/utils";
+import _ from "lodash";
+
+//Data Structure example for umbrPoolData
+const initialUmbrPoolData = {
+  ethereum: { 1: null, 7: null, 14: null, 30: null },
+  polygon: { 1: null, 7: null, 14: null, 30: null },
+};
 
 function UmbrPools() {
-  const [umbrPoolData, setUmbrPoolData] = useState({});
+  const [umbrPoolData, setUmbrPoolData] = useState(initialUmbrPoolData);
   const [selectedAvg, setSelectedAvg] = useState(7);
   const headers = [
     { text: "Asset", styles: {} },
@@ -26,11 +33,11 @@ function UmbrPools() {
   ];
 
   function umbrPoolAprFromPoolData(network) {
+    console.log(network, umbrPoolData);
     if (!Object.keys(umbrPoolData).length) return null;
     return Object.values(umbrPoolData).reduce((a, b) => a + b);
   }
 
-  /** Sets  */
   function handleAvgSelect(value) {
     console.log(`Setting for ${value}d average`);
     setSelectedAvg(value);
@@ -38,12 +45,26 @@ function UmbrPools() {
 
   useEffect(() => {
     async function getUmbrData() {
-      const poolData = await getUmbrPoolAprBreakdown("ethereum", 7);
-      console.log(poolData);
-      setUmbrPoolData(poolData);
+      let ethereumPoolData = getUmbrPoolAprBreakdown("ethereum", selectedAvg);
+      let polygonPoolData = getUmbrPoolAprBreakdown("matic", selectedAvg);
+      [ethereumPoolData, polygonPoolData] = await Promise.all([
+        ethereumPoolData,
+        polygonPoolData,
+      ]);
+
+      let newData = { ...umbrPoolData };
+      newData.ethereum[selectedAvg] = ethereumPoolData;
+      newData.polygon[selectedAvg] = polygonPoolData;
+      setUmbrPoolData(newData);
     }
-    getUmbrData();
-  }, []);
+
+    // check the umbrPoolData[selectedAvg]
+    // If it's undefined, get the data
+    // if it's already there, we good
+    console.log("In useEffect for getting UMBR Pool Data");
+    console.log(umbrPoolData);
+    getUmbrData(selectedAvg);
+  }, [selectedAvg]);
 
   const buttons = [
     { text: "30d", value: 30 },
@@ -82,37 +103,32 @@ function UmbrPools() {
                   Staking Rewards for UMBR on Ethereum Network
                 </h5>
                 <p className="card-subtitle mb-2">
-                  {`Estimated rewards for staking UMBR: ${(
-                    umbrPoolAprFromPoolData("ethereum") * 100
-                  ).toFixed(2)}%`}
+                  {`Estimated rewards for staking UMBR: ${
+                    umbrPoolData.ethereum[selectedAvg]
+                      ? formatPercent(
+                          _.sum(_.values(umbrPoolData.ethereum[selectedAvg]))
+                        )
+                      : "--%"
+                  }`}
                 </p>
-                <table className="table table-sm">
-                  <thead>
-                    <tr>
-                      {headers.map((header) => (
-                        <th
-                          key={header.text}
-                          style={{ ...header.styles }}
-                          scope="col"
-                        >
-                          {header.text}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((entry) => {
-                      return (
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>{" "}
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">
+                  Staking Rewards for UMBR on Polygon Network
+                </h5>
+                <p className="card-subtitle mb-2">
+                  {`Estimated rewards for staking UMBR: ${
+                    umbrPoolData.polygon[selectedAvg]
+                      ? formatPercent(
+                          _.sum(_.values(umbrPoolData.polygon[selectedAvg]))
+                        )
+                      : "--%"
+                  }`}
+                </p>
               </div>
             </div>
           </div>
@@ -125,7 +141,7 @@ function UmbrPools() {
 export default UmbrPools;
 
 /////////DEMO DATA AND CHART
-const data = [
+const demoChartData = [
   {
     network: "Ethereum",
     ETH: 20.36,
@@ -151,7 +167,7 @@ function RechartChart() {
   return (
     <ResponsiveContainer width="100%" aspect={3}>
       <BarChart
-        data={data}
+        data={demoChartData}
         margin={{
           top: 20,
           right: 30,
@@ -171,7 +187,3 @@ function RechartChart() {
     </ResponsiveContainer>
   );
 }
-
-// function ApexChartsChart() {
-//   return {<ApexCharts ser/>};
-// }
