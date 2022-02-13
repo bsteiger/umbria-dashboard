@@ -2,7 +2,7 @@ import CoinGecko from "../../logic/coinGeckoApi";
 import UmbriaApi from "../../logic/umbriaApi";
 import { getEpochMinus } from "../../logic/utils";
 import NETWORKS from "../../constants/networks";
-
+import { formatPercent } from "../../logic/utils";
 const umbria = new UmbriaApi();
 const coingecko = new CoinGecko();
 const currentPrices = {};
@@ -19,11 +19,12 @@ export async function getUmbrPoolAprBreakdown(network, days = 1) {
   /**Ethereum network UMBR stakers also get rewards from all other
    * bridges that don't have the umbr token on their network */
   let networks;
-  if (network === "ethereum")
-    networks = NETWORKS.filter((network) => network.apiName !== "matic").map(
-      (network) => network.apiName
-    );
-  else networks = [network];
+  networks =
+    network === "ethereum"
+      ? (networks = NETWORKS.filter(
+          (network) => network.apiName !== "matic"
+        ).map((network) => network.apiName))
+      : (networks = [network]);
 
   let aprs = {};
   for (let network of networks) {
@@ -34,7 +35,7 @@ export async function getUmbrPoolAprBreakdown(network, days = 1) {
       mainNetTvls,
       bridgeVols,
     ]);
-    console.log({ tvls, mainNetTvls, bridgeVols });
+
     const umbrTvl = +mainNetTvls.assets.UMBR;
     tvls = tvls.assets;
 
@@ -50,17 +51,19 @@ export async function getUmbrPoolAprBreakdown(network, days = 1) {
 
       let apr = (dailyReward / umbrTvl) * 365;
       aprs[asset] = aprs[asset] ? aprs[asset] + apr : apr;
-
-      console.log(`${asset} APR: ${(apr * 100).toFixed(2)}%`);
     }
   }
   console.log(
-    `${days} day average cumulative APR for staking UMBR on ${network} network: ${(
-      Object.values(aprs).reduce((a, b) => a + b) * 100
-    ).toFixed(2)}%`
+    `${days} day average cumulative APR for staking UMBR on ${network} network: ${formatPercent(
+      Object.values(aprs).reduce((a, b) => a + b)
+    )}`
   );
+  console.log(`Breakdown for ${network} network`, aprs);
   return aprs;
 }
+
+export function formatAprDataForApex() {}
+export function formatAprDataForRechart() {}
 
 async function getPriceBySymbol(symbol) {
   if (currentPrices[symbol]) return currentPrices[symbol];
