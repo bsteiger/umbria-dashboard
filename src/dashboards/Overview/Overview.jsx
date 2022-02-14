@@ -16,6 +16,12 @@ function Overview() {
   const coingecko = new CoinGecko();
 
   useEffect(() => {
+    document.title = umbrPrice
+      ? `UMBR Dash | Overview ($${umbrPrice})`
+      : `UMBR Dash | Overview`;
+  }, [umbrPrice]);
+
+  useEffect(() => {
     async function getCurrentUmbrPrice() {
       console.log(`app.getCurrentUmbrPrice()`);
       setUmbrPrice(await coingecko.getPriceById("umbra-network"));

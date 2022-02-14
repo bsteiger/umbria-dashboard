@@ -14,6 +14,10 @@ export default function BridgeVolumeAll() {
   const [selectedNetwork, setselectedNetwork] = useState("");
 
   useEffect(() => {
+    document.title = "UMBR Dash | Average Bridge Volume";
+  }, []);
+
+  useEffect(() => {
     const getUmbrData = async () => {
       console.log("getUmbrData");
       setNetworks(await umbria.getNetworks());
