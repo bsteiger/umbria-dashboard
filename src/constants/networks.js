@@ -19,9 +19,20 @@ export const NATIVEADDRESSES = {
   avax: "0xAVAX",
 };
 
+//Render Colors for Rechart
+export const COLORS = {
+  MATIC: "#9f72ea",
+  ETH: "#626890",
+  UMBR: "#272727",
+  GHST: "#fc16f4",
+  USDT: "#50af95",
+  USDC: "#2775ca",
+  WBTC: "#f09243",
+};
+
 export const BRIDGEDISPLAYNAMES = {
   ethavax: "Ethereum ↔ Avalanche",
-  ethmatic: "Ethereum ↔ Matic",
+  ethmatic: "Ethereum ↔ Polygon",
   ethbsc: "Ethereum ↔ Binance Smart Chain",
 };
 

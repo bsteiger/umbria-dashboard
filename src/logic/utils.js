@@ -1,3 +1,8 @@
+export function calculateApr() {
+  console.log("calculateApr not fully implemented.");
+  return;
+}
+
 /** format to 2 decimals */
 export function formatPrice(number) {
   return number.toFixed(2);
@@ -21,6 +26,11 @@ export function getDateMinus({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
 /**  Returns Epoch Time of current date minus given amounts*/
 export function getEpochMinus({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
   return dateToEpochTime(getDateMinus({ days, hrs, mins, secs }));
+}
+
+/** Formats decimal value to percent (0.39 -> 39%) */
+export function formatPercent(value, decimalPoints = 0) {
+  return `${(value * 100).toFixed(decimalPoints)}%`;
 }
 
 function milliseconds({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
