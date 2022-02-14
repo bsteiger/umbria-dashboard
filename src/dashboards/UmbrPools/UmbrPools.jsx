@@ -28,6 +28,10 @@ function UmbrPools() {
   const [umbrPoolData, setUmbrPoolData] = useState(initialUmbrPoolData);
   const [selectedAvg, setSelectedAvg] = useState(7);
 
+  useEffect(() => {
+    document.title = `UMBR Dash | UMBR Pool APR Breakdown`;
+  }, []);
+
   function handleAvgSelect(value) {
     console.log(`Setting for ${value}d average`);
     setSelectedAvg(value);

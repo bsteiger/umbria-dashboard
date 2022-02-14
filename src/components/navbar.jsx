@@ -8,13 +8,13 @@ export default function NavBar() {
   const navLinks = [
     { text: "Overview", route: "/" },
     { text: "UMBR Pool Rewards", route: "/umbrPools" },
-    { text: "Test", route: "/test" },
+    // { text: "Test", route: "/test" },
     { text: "Bridge Volume", route: "/network/bridgevolume/" },
-    {
-      text: <FontAwesomeIcon icon={faBookOpen} />,
-      href: "https://bridge.umbria.network/docs/docs-page.html#api-calls",
-      newWindow: true,
-    },
+    // {
+    //   text: <FontAwesomeIcon icon={faBookOpen} />,
+    //   href: "https://bridge.umbria.network/docs/docs-page.html#api-calls",
+    //   newWindow: true,
+    // },
   ];
 
   const renderNavLinkLi = (navLink) => {
@@ -45,7 +45,7 @@ export default function NavBar() {
     <nav className="navbar navbar-light bg-light navbar-expand sm">
       <Link to="/" className="navbar__navbar-brand navbar-brand">
         <img src={logo} height="30px" alt="Umbria Logo" />
-        <span className="">Umbria Bridge</span>
+        <span className="">Umbria Bridge Analytics</span>
       </Link>
       <ul className="navbar-nav mr-auto">
         {navLinks.map((navLink) =>
