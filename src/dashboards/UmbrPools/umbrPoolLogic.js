@@ -63,7 +63,12 @@ export async function getUmbrPoolAprBreakdown(network, days = 1) {
 }
 
 export function formatAprDataForApex() {}
-export function formatAprDataForRechart() {}
+export function formatAprDataForRechart(data, key) {
+  return [
+    { network: "Ethereum", ...data.ethereum[key] },
+    { network: "Polygon", ...data.polygon[key] },
+  ];
+}
 
 async function getPriceBySymbol(symbol) {
   if (currentPrices[symbol]) return currentPrices[symbol];

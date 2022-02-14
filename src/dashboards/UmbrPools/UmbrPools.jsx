@@ -11,7 +11,11 @@ import {
   XAxis,
 } from "recharts";
 import React, { useState, useEffect } from "react";
-import { getUmbrPoolAprBreakdown } from "./umbrPoolLogic";
+import {
+  getUmbrPoolAprBreakdown,
+  formatAprDataForRechart,
+} from "./umbrPoolLogic";
+import { COLORS } from "../../constants/networks";
 import ButtonGroup from "../../components/ButtonGroup";
 import { formatPercent } from "../../logic/utils";
 import _ from "lodash";
@@ -25,18 +29,6 @@ const initialUmbrPoolData = {
 function UmbrPools() {
   const [umbrPoolData, setUmbrPoolData] = useState(initialUmbrPoolData);
   const [selectedAvg, setSelectedAvg] = useState(7);
-  const headers = [
-    { text: "Asset", styles: {} },
-    { text: "Network", styles: {} },
-    { text: "Bridge", styles: {} },
-    { text: "APY", styles: { textAlign: "right" }, sortIconLocation: "left" },
-  ];
-
-  function umbrPoolAprFromPoolData(network) {
-    console.log(network, umbrPoolData);
-    if (!Object.keys(umbrPoolData).length) return null;
-    return Object.values(umbrPoolData).reduce((a, b) => a + b);
-  }
 
   function handleAvgSelect(value) {
     console.log(`Setting for ${value}d average`);
@@ -57,12 +49,7 @@ function UmbrPools() {
       newData.polygon[selectedAvg] = polygonPoolData;
       setUmbrPoolData(newData);
     }
-
-    // check the umbrPoolData[selectedAvg]
-    // If it's undefined, get the data
-    // if it's already there, we good
-    console.log("In useEffect for getting UMBR Pool Data");
-    console.log(umbrPoolData);
+    //TODO: only update if no data in umbrPoolData[network][selectedAvg]
     getUmbrData(selectedAvg);
   }, [selectedAvg]);
 
@@ -90,7 +77,9 @@ function UmbrPools() {
                 <p className="card-subtitle mb-2">
                   Estimated rewards for staking UMBR (broken down by asset)
                 </p>
-                <RechartChart />
+                <RechartChart
+                  data={formatAprDataForRechart(umbrPoolData, selectedAvg)}
+                />
               </div>
             </div>
           </div>
@@ -140,34 +129,11 @@ function UmbrPools() {
 
 export default UmbrPools;
 
-/////////DEMO DATA AND CHART
-const demoChartData = [
-  {
-    network: "Ethereum",
-    ETH: 20.36,
-    GHST: 0.003,
-    UMBR: 0,
-    USDT: 0.115,
-    USDC: 0.67,
-    MATIC: 0.9882503630437056,
-    WBTC: 0.004291140417084454,
-  },
-  {
-    network: "Polygon",
-    ETH: 16.36,
-    GHST: 0.003,
-    UMBR: 0,
-    USDT: 0.115,
-    USDC: 0.67,
-    MATIC: 0.9882503630437056,
-    WBTC: 0.004291140417084454,
-  },
-];
-function RechartChart() {
+function RechartChart({ data }) {
   return (
     <ResponsiveContainer width="100%" aspect={3}>
       <BarChart
-        data={demoChartData}
+        data={data}
         margin={{
           top: 20,
           right: 30,
@@ -176,13 +142,18 @@ function RechartChart() {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
+        <XAxis dataKey="network" />
+        {data && <YAxis tickFormatter={(tick) => formatPercent(tick, 0)} />}
+        {/* <YAxis tickFormatter={(tick) => formatPercent(tick, 0)} /> */}
+        <Tooltip formatter={(val) => formatPercent(val, 2)} />
         <Legend />
-        <Bar dataKey="ETH" stackId="a" fill="#8884d8" />
-        <Bar dataKey="USDC" stackId="a" fill="#82ca9d" />
-        <Bar dataKey="MATIC" stackId="a" />
+        <Bar dataKey="ETH" stackId="a" fill={COLORS.ETH} />
+        <Bar dataKey="UMBR" stackId="a" fill={COLORS.UMBR} />
+        <Bar dataKey="USDT" stackId="a" fill={COLORS.USDT} />
+        <Bar dataKey="USDC" stackId="a" fill={COLORS.USDC} />
+        <Bar dataKey="MATIC" stackId="a" fill={COLORS.MATIC} />
+        <Bar dataKey="GHST" stackId="a" fill={COLORS.GHST} />
+        <Bar dataKey="WBTC" stackId="a" fill={COLORS.WBTC} />
       </BarChart>
     </ResponsiveContainer>
   );
