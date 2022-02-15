@@ -27,6 +27,18 @@ const initialUmbrPoolData = {
 function UmbrPools() {
   const [umbrPoolData, setUmbrPoolData] = useState(initialUmbrPoolData);
   const [selectedAvg, setSelectedAvg] = useState(7);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const handleResize = () => {
+    if (window.innerWidth < 1000) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+  });
 
   useEffect(() => {
     document.title = `UMBR Dash | UMBR Pool APR Breakdown`;
@@ -80,6 +92,7 @@ function UmbrPools() {
                   Estimated rewards for staking UMBR (broken down by asset)
                 </p>
                 <RechartChart
+                  isMobile={isMobile}
                   data={formatAprDataForRechart(umbrPoolData, selectedAvg)}
                 />
               </div>
@@ -131,9 +144,9 @@ function UmbrPools() {
 
 export default UmbrPools;
 
-function RechartChart({ data }) {
+function RechartChart({ data, isMobile }) {
   return (
-    <ResponsiveContainer width="100%" aspect={3}>
+    <ResponsiveContainer width="100%" aspect={isMobile ? 1.5 : 3}>
       <BarChart
         data={data}
         margin={{
@@ -145,7 +158,18 @@ function RechartChart({ data }) {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="network" />
-        {data && <YAxis tickFormatter={(tick) => formatPercent(tick, 0)} />}
+        {data && (
+          <YAxis
+            label={{
+              value: "APR",
+
+              angle: -90,
+              position: "insideLeft",
+              fill: "#666666",
+            }}
+            tickFormatter={(tick) => formatPercent(tick, 0)}
+          />
+        )}
         {/* <YAxis tickFormatter={(tick) => formatPercent(tick, 0)} /> */}
         <Tooltip formatter={(val) => formatPercent(val, 2)} />
         <Legend />
