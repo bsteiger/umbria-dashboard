@@ -27,7 +27,7 @@ const initialUmbrPoolData = {
 function UmbrPools() {
   const [umbrPoolData, setUmbrPoolData] = useState(initialUmbrPoolData);
   const [selectedAvg, setSelectedAvg] = useState(7);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth);
 
   const handleResize = () => {
     if (window.innerWidth < 1000) {
@@ -50,22 +50,24 @@ function UmbrPools() {
   }
 
   useEffect(() => {
-    async function getUmbrData() {
-      let ethereumPoolData = getUmbrPoolAprBreakdown("ethereum", selectedAvg);
-      let polygonPoolData = getUmbrPoolAprBreakdown("matic", selectedAvg);
+    async function getUmbrData(key) {
+      let ethereumPoolData = getUmbrPoolAprBreakdown("ethereum", key);
+      let polygonPoolData = getUmbrPoolAprBreakdown("matic", key);
       [ethereumPoolData, polygonPoolData] = await Promise.all([
         ethereumPoolData,
         polygonPoolData,
       ]);
 
       let newData = { ...umbrPoolData };
-      newData.ethereum[selectedAvg] = ethereumPoolData;
-      newData.polygon[selectedAvg] = polygonPoolData;
+
+      newData.ethereum[key] = ethereumPoolData;
+      newData.polygon[key] = polygonPoolData;
       setUmbrPoolData(newData);
     }
-    //TODO: only update if no data in umbrPoolData[network][selectedAvg]
-    getUmbrData(selectedAvg);
-  }, [selectedAvg]);
+    for (let key of _.keys(initialUmbrPoolData.ethereum)) {
+      getUmbrData(key);
+    }
+  }, []);
 
   const buttons = [
     { text: "30d", value: 30 },
