@@ -1,7 +1,10 @@
 import "../../umbria.typedefinitions";
 import UmbriaApi from "../../logic/umbriaApi";
 import { getEpochMinus } from "../../logic/utils";
-import BridgeVolumeAll from "./bridgeVolumeAll";
+import CoinGecko from "../../logic/coinGeckoApi";
+import _ from "lodash";
+import promiseAllProperties from "promise-all-properties";
+
 const api = new UmbriaApi();
 
 export default {
@@ -32,8 +35,20 @@ export default {
   },
 };
 
+let prices = {};
+const coingecko = new CoinGecko();
+
+async function getPrice(symbol) {
+  if (prices[symbol]) {
+    return prices[symbol];
+  }
+  let price = await coingecko.getPriceBySymbol(symbol);
+  prices[symbol] = price;
+  return price;
+}
+
 //** formats and averages bridge data to represent average daily volume */
-function formatBridgeData(data) {
+async function formatBridgeData(data) {
   let rawData = [];
   for (let entry of data) {
     for (let asset in entry.data) {
@@ -50,6 +65,12 @@ function formatBridgeData(data) {
     }
   }
   let assets = new Set(rawData.map((o) => o.asset));
+  await coingecko.updateCoinList();
+  for (let asset of assets) {
+    prices[asset] = coingecko.getPriceBySymbol(asset);
+  }
+  prices = await promiseAllProperties(prices);
+  console.log(prices);
   let networks = new Set(rawData.map((o) => o.network));
   let newEntries = [];
   for (let network of networks) {
@@ -63,9 +84,12 @@ function formatBridgeData(data) {
         {
           network,
           asset,
+          price: prices[asset],
           days: entry.map((o) => `${o.day}d`),
           totalVols: entry.map((o) => o.total),
+          totalVolsUsd: entry.map((o) => o.total * prices[asset]),
           avgVols: entry.map((o) => o.avg),
+          avgVolsUsd: entry.map((o) => o.avg * prices[asset]),
         },
       ];
     }

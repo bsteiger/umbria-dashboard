@@ -41,7 +41,6 @@ export default function lineChart({ data, title }) {
 
   useEffect(() => {
     if (!data) return;
-    console.log(data);
     setSeries(data ? data : []);
   }, []);
 

@@ -5,7 +5,7 @@ import NavBar from "./components/navbar.jsx";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Error404 from "./components/error404";
 import BarChart from "./components/chartTest";
-import BridgeVolumeAll from "./dashboards/bridgeVolume/bridgeVolumeAll";
+import BridgeVolumeAll from "./dashboards/bridgeVolume/BridgeVolumeAll";
 import Test from "./components/Test";
 import Overview from "./dashboards/Overview";
 import UmbrPools from "./dashboards/UmbrPools/UmbrPools";

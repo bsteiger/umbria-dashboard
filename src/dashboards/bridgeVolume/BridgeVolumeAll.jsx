@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./bridgeVolumeAll.css";
 // import UmbriaApi from "../../logic/umbr";
-import umbria from "./umbria";
-import { getEpochMinus } from "../../../src/logic/utils";
+import umbria from "./bridgeVolumeLogic";
+import { getEpochMinus } from "../../logic/utils";
 import BridgeVolOverTimeChart from "./bridgeVolOverTime";
 import _ from "lodash";
 
@@ -76,7 +76,7 @@ export default function BridgeVolumeAll() {
       plots = [
         ...plots,
         {
-          data: data.avgVols,
+          data: data.avgVolsUsd,
           name: `${data.asset} (${data.network})`,
         },
       ];
@@ -131,12 +131,12 @@ function Selector({ defaultText, items, onChange }) {
   );
 }
 
-function NetworksList({ networks }) {
-  return (
-    <ul>
-      {networks.map((network) => (
-        <li key={network.apiName}>{network.displayName}</li>
-      ))}
-    </ul>
-  );
-}
+// function NetworksList({ networks }) {
+//   return (
+//     <ul>
+//       {networks.map((network) => (
+//         <li key={network.apiName}>{network.displayName}</li>
+//       ))}
+//     </ul>
+//   );
+// }
