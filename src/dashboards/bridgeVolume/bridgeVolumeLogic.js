@@ -26,7 +26,7 @@ export default {
       }
     }
     let resolvedData = await Promise.all(promises);
-    for (i in data) {
+    for (let i in data) {
       data[i].data = resolvedData[i];
     }
     return formatBridgeData(data);
