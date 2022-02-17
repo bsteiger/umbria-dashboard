@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./bridgeVolumeAll.css";
 // import UmbriaApi from "../../logic/umbr";
-import umbria from "./umbria";
-import { getEpochMinus } from "../../../src/logic/utils";
+import umbria from "./bridgeVolumeLogic";
+import { getEpochMinus } from "../../logic/utils";
 import BridgeVolOverTimeChart from "./bridgeVolOverTime";
 import _ from "lodash";
 
@@ -24,14 +24,17 @@ export default function BridgeVolumeAll() {
       if (selectedNetwork === "") setselectedNetwork(networks[0]);
       let bridgeData = await umbria.getAvgBridgeVolData();
       setBridgeData(bridgeData);
-      getAssetsFromBridgeData();
       // setAssets();
     };
     getUmbrData();
   }, []);
 
+  useEffect(() => {
+    getAssetsFromBridgeData();
+  }, [bridgeData]);
+
   async function getAssetsFromBridgeData(dat) {
-    console.log(bridgeData);
+    setAssets(Array(...new Set(bridgeData.map((o) => o.asset))));
   }
 
   function handleNetworkSelect(value) {
@@ -49,7 +52,7 @@ export default function BridgeVolumeAll() {
           title={
             selectedNetwork
               ? `Data for ${selectedNetwork}`
-              : "Please select a network"
+              : "Data for all networks"
           }
           data={bridgeDataToPlot()}
           network={selectedNetwork}
@@ -73,7 +76,7 @@ export default function BridgeVolumeAll() {
       plots = [
         ...plots,
         {
-          data: data.avgVols,
+          data: data.avgVolsUsd,
           name: `${data.asset} (${data.network})`,
         },
       ];
@@ -85,16 +88,20 @@ export default function BridgeVolumeAll() {
   return (
     <div>
       <div className="container">
-        <h3 className="title">Average Bridge Volume</h3>
+        <h3 className="title">Average Daily Bridge Volume</h3>
         <Selector
-          defaultText="Select Network"
+          defaultText="All Networks"
           onChange={handleNetworkSelect}
-          items={networks}
+          items={networks.map((n) => {
+            return { text: n.displayName, value: n.apiName };
+          })}
         />
         <Selector
-          defaultText="Select Asset"
+          defaultText="All Assets"
           onChange={handleAssetSelect}
-          items={assets}
+          items={assets.map((asset) => {
+            return { text: asset, value: asset };
+          })}
         />
         <BridgeVolumeOverTime />
       </div>
@@ -116,20 +123,20 @@ function Selector({ defaultText, items, onChange }) {
       </option>
 
       {items.map((item) => (
-        <option value={item.apiName} key={item.apiName}>
-          {item.displayName}
+        <option value={item.value} key={item.value}>
+          {item.text}
         </option>
       ))}
     </select>
   );
 }
 
-function NetworksList({ networks }) {
-  return (
-    <ul>
-      {networks.map((network) => (
-        <li key={network.apiName}>{network.displayName}</li>
-      ))}
-    </ul>
-  );
-}
+// function NetworksList({ networks }) {
+//   return (
+//     <ul>
+//       {networks.map((network) => (
+//         <li key={network.apiName}>{network.displayName}</li>
+//       ))}
+//     </ul>
+//   );
+// }
