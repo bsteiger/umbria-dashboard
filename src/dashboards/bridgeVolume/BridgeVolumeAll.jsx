@@ -88,7 +88,7 @@ export default function BridgeVolumeAll() {
   return (
     <div>
       <div className="container">
-        <h3 className="title">Average Bridge Volume</h3>
+        <h3 className="title">Average Daily Bridge Volume</h3>
         <Selector
           defaultText="All Networks"
           onChange={handleNetworkSelect}
