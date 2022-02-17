@@ -21,12 +21,14 @@ export default {
     for (let n of networks) {
       for (let day of days) {
         let epoch = getEpochMinus({ days: day });
-        let fetchedData = await api.getTotalBridgeVolume(n.apiName, epoch);
-        promises = [...promises, fetchedData];
-        data = [...data, { day: day, network: n.apiName, data: fetchedData }];
+        promises = [...promises, api.getTotalBridgeVolume(n.apiName, epoch)];
+        data = [...data, { day: day, network: n.apiName }];
       }
     }
-    promises = await Promise.all(promises);
+    let resolvedData = await Promise.all(promises);
+    for (i in data) {
+      data[i].data = resolvedData[i];
+    }
     return formatBridgeData(data);
   },
 
