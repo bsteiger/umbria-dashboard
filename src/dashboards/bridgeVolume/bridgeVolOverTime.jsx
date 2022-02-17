@@ -34,6 +34,13 @@ export default function lineChart({ data, title }) {
     xaxis: {
       categories: ["30d", "14d", "7d", "1d"],
     },
+    yaxis: {
+      labels: {
+        formatter: (value) => {
+          return value ? "$" + value.toLocaleString("en-US") : undefined;
+        },
+      },
+    },
   };
 
   const [series, setSeries] = useState([]);
