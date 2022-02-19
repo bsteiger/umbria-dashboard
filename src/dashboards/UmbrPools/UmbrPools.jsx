@@ -25,12 +25,13 @@ const initialUmbrPoolData = {
 };
 
 function UmbrPools() {
+  const mobileWidth = 1000;
   const [umbrPoolData, setUmbrPoolData] = useState(initialUmbrPoolData);
   const [selectedAvg, setSelectedAvg] = useState(7);
-  const [isMobile, setIsMobile] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < mobileWidth);
 
   const handleResize = () => {
-    if (window.innerWidth < 1000) {
+    if (window.innerWidth < mobileWidth) {
       setIsMobile(true);
     } else {
       setIsMobile(false);
