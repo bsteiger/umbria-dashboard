@@ -7,7 +7,7 @@ function AllNetworksAllApys({ data }) {
   }
 
   return (
-    <div className="row mt-2">
+    <div className="row row-cols-2 row-cols-lg-2 mt-2">
       {NETWORKS.map((network) => {
         // console.log(data);
         return (
@@ -25,7 +25,7 @@ function AllNetworksAllApys({ data }) {
 function BridgeApyCard({ bridgeData, network }) {
   return (
     <div className="col">
-      <div className="card">
+      <div className="card mb-2">
         <h6 className="card-body">{network} Network</h6>
         {bridgeData.map((pool) => {
           return (

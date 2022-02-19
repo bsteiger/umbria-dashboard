@@ -102,9 +102,9 @@ function UmbrPools() {
             </div>
           </div>
         </div>
-        <div className="row mt-2">
+        <div className="row row-cols-1 row-cols-lg-2 mt-2">
           <div className="col">
-            <div className="card">
+            <div className="card mb-2">
               <div className="card-body">
                 <h5 className="card-title">
                   Staking Rewards for UMBR on Ethereum Network
@@ -122,7 +122,7 @@ function UmbrPools() {
             </div>
           </div>
           <div className="col">
-            <div className="card">
+            <div className="card mb-2">
               <div className="card-body">
                 <h5 className="card-title">
                   Staking Rewards for UMBR on Polygon Network
