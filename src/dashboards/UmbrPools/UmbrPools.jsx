@@ -79,8 +79,8 @@ function UmbrPools() {
 
   /// ((((RENDER)))) ///
   return (
-    <div className="overview-page">
-      <div className="container">
+    <div className="umbrpool-page">
+      <div className="container mt-2">
         <ButtonGroup
           buttons={buttons}
           onClick={(val) => handleAvgSelect(val)}

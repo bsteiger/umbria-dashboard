@@ -7,10 +7,11 @@ function ButtonGroup({ buttons, onClick, activeValue }) {
         <button
           key={button.text + button.value}
           value={button.value}
-          onClick={(e) => onClick(e.target.value)}
+          onClick={() => onClick(button.value)}
           type="button"
           className={[
-            "btn btn-secondary",
+            "btn",
+            "btn-secondary",
             button.value === activeValue ? "active" : "",
           ].join(" ")}
         >
