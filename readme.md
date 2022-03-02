@@ -1,6 +1,6 @@
 # Umbria Dashboard
 
-Unofficial Analytics Dashboard for the [Umbria Narni Bridge](https://bridge.umbria.network/staking-pool/)
+Unofficial Analytics Dashboard for the [Umbria Narni Bridge](https://bridge.umbria.network/staking-pool/)  
 Main branch is deployed at https://umbrdash.netlify.app
 
 ## Features
