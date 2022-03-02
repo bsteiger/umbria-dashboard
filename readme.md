@@ -1,58 +1,26 @@
-# TODO
+# Umbria Dashboard
 
-## Plans 2/5/21
+Unofficial Analytics Dashboard for the [Umbria Narni Bridge](https://bridge.umbria.network/staking-pool/)
+Main branch is deployed at https://umbrdash.netlify.app
 
-- [ ] create network/bridgevolume/ endpoint
-  - [ ] get data from get bridgeVolumeAll for [1,7,14,30] days
-  - [ ] Single asset pivot chart
-    - [ ] Dropdowns for:
-      - [ ] Network
-      - [ ] Bridge
-    - [ ] Option to switch between usd and native currency
-  - Later:
-    - use this data to make apy
-      - single time range doughnut charts for umbr earnings for each bridge
-        - switchable between 1d, 7d, 14d, 30d
-      - APY/Time plots for each bridge (similar to volume plots but in %)
+## Features
 
-# Data Plots to Implement
+- Sortable table of current reported APY yields for all assets across all networks
+- Estimated APR rewards for staking UMBR on Ethereum or Polygon Networks
+  - Calculated based on Average daily bridge volume for all assets as reported by Umbria Bridge API
+  - All APR values based on current TVL and token prices (token prices provided by CoinGecko API)
+- Plots of the average daily bridge volume values for all assets for the past 30 ,14 ,7, and 1 days
 
-## Umbria Stats
+## Run Locally
 
-Info for the protocol. No individual wallet info.  
-_\*should provide 24h 7d, 30d averages_
+Clone the repo and then install all npm packages.
 
-- [x] Current UMBR Price
-- [ ] Umbr Price history
-- [ ] Filterable APY Table
-  - [ ] Network (Bridge Side)
-  - [ ] Asset
-  - [ ] Bridge
-  - [ ] TVL
-  - [ ] Incoming Bridge Volume\*
-  - [ ] APY\*
-- [x] Bridge APYs
-  - [ ] Bar Graph grouped by network
-  - [ ] Table
-- [ ] UMBR APY Breakdown
-  - [ ] Pie Charts for each network
-    - [ ] Pie chart title total UMBR APY
-    - [ ] Slices contain effective APY(R?) per asset
-- [ ] Graphs
-  - [ ] For a given network/bridge/asset
-    - [ ] Plot one of the following:
-      - [ ] Bridge volume over time
-      - [ ] APY
-    - [ ] Comparable with other data on same axis
-    - [ ] Allow USD or percent
+```
+npm install
+```
 
-## Wallet Address Stats
+Launch the local instance
 
-Info for a given wallet address
-
-- [ ] Current USD of all assets staked on bridge
-- [ ] Pie Chart
-  - [ ] Single Network | All networks
-  - [ ] Per Asset
-    - [ ] If subgroup available break into bridge side
-- [ ] Liquidity provided vs. earned (Stacked bar graph?)
+```
+npm start
+```

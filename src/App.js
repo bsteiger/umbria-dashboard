@@ -9,6 +9,7 @@ import BridgeVolumeAll from "./dashboards/bridgeVolume/BridgeVolumeAll";
 import Test from "./components/Test";
 import Overview from "./dashboards/Overview";
 import UmbrPools from "./dashboards/UmbrPools/UmbrPools";
+import Footer from "./components/Footer";
 
 class App extends Component {
   render() {
@@ -24,6 +25,7 @@ class App extends Component {
           <Route path={"/"} exact component={Overview} />
           <Redirect to={"/error404"} />
         </Switch>
+        <Footer />
       </div>
     );
   }
