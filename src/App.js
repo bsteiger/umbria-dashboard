@@ -18,7 +18,7 @@ class App extends Component {
         <NavBar />
         <Switch>
           <Route path={"/chartTest/Donut"} exact component={BarChart} />
-          <Route path={"/umbrPools"} component={UmbrPools} />
+          {/* <Route path={"/umbrPools"} component={UmbrPools} /> */}
           <Route path={"/network/bridgevolume/"} component={BridgeVolumeAll} />
           <Route path={"/test"} component={Test}></Route>
           <Route path={"/error404"} exact component={Error404} />

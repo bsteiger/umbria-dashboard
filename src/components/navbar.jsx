@@ -7,7 +7,7 @@ import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 export default function NavBar() {
   const navLinks = [
     { text: "Overview", route: "/" },
-    { text: "UMBR Pool Rewards", route: "/umbrPools" },
+    // { text: "UMBR Pool Rewards", route: "/umbrPools" },
     // { text: "Test", route: "/test" },
     { text: "Bridge Volume", route: "/network/bridgevolume/" },
     // {
