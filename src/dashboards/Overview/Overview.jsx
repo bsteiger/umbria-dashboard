@@ -4,6 +4,7 @@ import CoinGecko from "../../logic/coinGeckoApi";
 import UmbriaApi from "../../logic/umbriaApi";
 import AllNetworksAllApys from "../../components/allNetworksAllApys";
 import TableAllApys from "../../components/TableAllApys";
+import BridgeVolumeAll from "../bridgeVolume/BridgeVolumeAll";
 /** Overview Dashboard Page
  *
  * Displays:
@@ -60,7 +61,16 @@ function Overview() {
             </div>
           </div>
         </div>
-        <AllNetworksAllApys data={allNetworksAllApys} />
+        <div className="row mt-2">
+          <div className="col">
+            <div className="card">
+              <div className="card-body">
+                <h6 className="card-title">Average Daily Bridge Volume</h6>
+                <BridgeVolumeAll showTitle={false}></BridgeVolumeAll>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
