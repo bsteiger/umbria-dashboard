@@ -1,9 +1,17 @@
 import httpService from "../services/httpService";
 
+type CoinGeckoCoinList = {
+  id: string;
+  symbol: string;
+  name: string;
+  platforms?: Record<string, string>; // {network: contractAddress}
+}[];
+
 /** Module to use CoinGecko API */
 class CoinGecko {
   baseUrl = "https://api.coingecko.com/api/v3/";
   currency = "usd";
+  coinList: CoinGeckoCoinList = [];
 
   async updateCoinList() {
     console.log("Updating Coin List...");
@@ -14,14 +22,14 @@ class CoinGecko {
   async getCoinList() {
     console.log("Getting Coin List...");
     const endpoint = `${this.baseUrl}coins/list?include_platform=true`;
-    const coinList = await _fetch(endpoint);
+    const coinList = (await _fetch(endpoint)) as CoinGeckoCoinList;
     console.log("Got Coin List.", `${coinList.length} coins.`);
     return coinList;
   }
 
   //* Return the first id for a given symbol
-  async getIdBySymbol(symbol) {
-    if (!this.coinList) {
+  async getIdBySymbol(symbol: string) {
+    if (!this.coinList.length) {
       await this.updateCoinList();
     }
     const coinList = await this.coinList;
@@ -31,18 +39,18 @@ class CoinGecko {
     return coin.id;
   }
 
-  async getIdByContractAddress(address, platform) {}
+  async getIdByContractAddress(address: string, platform: string) {}
 
-  async getPriceById(id, currency = this.currency) {
+  async getPriceById(id: string, currency = this.currency) {
     console.log(`Getting price for id:${id}`);
     const endpoint = `${this.baseUrl}coins/${id}`;
     const data = await _fetch(endpoint);
-    const price = +data.market_data.current_price[this.currency];
+    const price = +data.market_data.current_price[currency];
     console.log(price);
     return price;
   }
 
-  async getPriceBySymbol(symbol) {
+  async getPriceBySymbol(symbol: string) {
     console.log(`Getting price for symbol:${symbol}`);
     const id = await this.getIdBySymbol(symbol);
     return await this.getPriceById(id);
@@ -50,7 +58,7 @@ class CoinGecko {
 }
 
 /** Internal function to do the api fetch and handle errors (eventually) */
-async function _fetch(endpoint) {
+async function _fetch(endpoint: string) {
   const resp = await httpService.get(endpoint);
   return resp.data;
 }
