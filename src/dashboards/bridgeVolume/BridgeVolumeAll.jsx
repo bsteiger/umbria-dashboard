@@ -4,9 +4,9 @@ import "./bridgeVolumeAll.css";
 import umbria from "./bridgeVolumeLogic";
 import { getEpochMinus } from "../../logic/utils";
 import BridgeVolOverTimeChart from "./bridgeVolOverTime";
-import _ from "lodash";
+import _, { capitalize } from "lodash";
 
-export default function BridgeVolumeAll() {
+export default function BridgeVolumeAll({ showTitle = true }) {
   const [bridgeData, setBridgeData] = useState([]);
   const [networks, setNetworks] = useState([]);
   const [assets, setAssets] = useState([]);
@@ -51,7 +51,7 @@ export default function BridgeVolumeAll() {
         <BridgeVolOverTimeChart
           title={
             selectedNetwork
-              ? `Data for ${selectedNetwork}`
+              ? `Data for ${capitalize(selectedNetwork)} network`
               : "Data for all networks"
           }
           data={bridgeDataToPlot()}
@@ -88,7 +88,7 @@ export default function BridgeVolumeAll() {
   return (
     <div>
       <div className="container">
-        <h3 className="title">Average Daily Bridge Volume</h3>
+        {showTitle && <h3 className="subtitle">Average Daily Bridge Volume</h3>}
         <Selector
           defaultText="All Networks"
           onChange={handleNetworkSelect}
