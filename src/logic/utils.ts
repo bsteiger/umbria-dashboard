@@ -4,7 +4,7 @@ export function calculateApr() {
 }
 
 /** format to 2 decimals */
-export function formatPrice(number) {
+export function formatPrice(number: number) {
   return number.toFixed(2);
 }
 
@@ -13,13 +13,13 @@ export function formatPrice(number) {
  * @param {Date} date
  * @returns {int} epochTime
  */
-export function dateToEpochTime(date) {
+export function dateToEpochTime(date: Date) {
   return Math.floor(date.getTime() / 1000.0);
 }
 
 /**  Returns Date object of current date minus given amounts*/
 export function getDateMinus({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
-  const now = new Date();
+  const now = Date.now();
   return new Date(now - milliseconds({ days, hrs, mins, secs }));
 }
 
@@ -29,7 +29,7 @@ export function getEpochMinus({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
 }
 
 /** Formats decimal value to percent (0.39 -> 39%) */
-export function formatPercent(value, decimalPoints = 0) {
+export function formatPercent(value: number, decimalPoints = 0) {
   return `${(value * 100).toFixed(decimalPoints)}%`;
 }
 
@@ -42,6 +42,6 @@ function milliseconds({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
   );
 }
 
-export function convertFromWei(wei) {
+export function convertFromWei(wei: number) {
   return wei * 10 ** -18;
 }
