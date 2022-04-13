@@ -1,6 +1,9 @@
 import React from "react";
 
-function UmbrPrice({ price }) {
+interface Props {
+  price: number;
+}
+function UmbrPrice({ price }: Props) {
   return (
     <div className="card">
       <div className="card-body">

@@ -1,9 +1,9 @@
-import NETWORKS, { BRIDGEDISPLAYNAMES } from "../constants/networks";
+import NETWORKS, { BRIDGEDISPLAYNAMES, Bridge } from "../constants/networks";
 import { convertFromWei, getEpochMinus } from "./utils";
 import httpService from "../services/httpService";
 
 const http = {
-  get: async (endpoint) => {
+  get: async (endpoint: string) => {
     const resp = await httpService.get(endpoint);
     return resp.data;
   },
@@ -22,14 +22,14 @@ export default class UmbriaApi {
   }
 
   /** Get the APY (annual percentage yield) for all assets on a single network */
-  async getApyAll(network) {
+  async getApyAll(network: string) {
     const endpoint = `${this.baseUrl}/api/pool/getApyAll/?network=${network}`;
     return await http.get(endpoint);
   }
 
   /** Get the volume of liquidity currently provided by an address, for a
    * particular asset on a single network */
-  async getStaked(tokenAddress, userAddress, network) {
+  async getStaked(tokenAddress: string, userAddress: string, network: string) {
     const endpoint =
       `${this.baseUrl}/api/pool/getStaked/?tokenAddress=` +
       `${tokenAddress}&userAddress=${userAddress}&network=${network}`;
@@ -38,7 +38,7 @@ export default class UmbriaApi {
 
   /** Get the total value of locked liquidity currently provided for all assets
    * on a single network */
-  async getTvlAll(network) {
+  async getTvlAll(network: string) {
     const endpoint = `${this.baseUrl}/api/pool/getTvlAll/?network=${network}`;
     return await http.get(endpoint);
   }
@@ -61,7 +61,7 @@ export default class UmbriaApi {
 
   /** Get the amount of liquidity available for a single transaction of a single
    * asset on a given network	 */
-  async getAvailableLiquidity(network, currencyAddress) {
+  async getAvailableLiquidity(network: string, currencyAddress: string) {
     const endpoint =
       `${this.baseUrl}/api/bridge/getAvailableLiquidity/` +
       `?network=${network}&currency=${currencyAddress}`;
@@ -69,13 +69,13 @@ export default class UmbriaApi {
   }
 
   /** Get the network fee cost for the bridge transaction */
-  async getGasPrice(network) {
+  async getGasPrice(network: string) {
     const endpoint = `${this.baseUrl}/api/bridge/getGasPrice/?network=${network}`;
     return await http.get(endpoint);
   }
 
   /** Get APY Bridge Routes */
-  async getAPYAllBridgeRoutes(network) {
+  async getAPYAllBridgeRoutes(network: string) {
     const endpoint =
       `${this.baseUrl}/api/pool/getAPYAllBridgeRoutes/` +
       `?&network=${network}`;
@@ -89,7 +89,7 @@ export default class UmbriaApi {
    * @param {str} network - Network name eg. matic, ethereum
    * @param {int} timeSince - EpochTime in Seconds
    */
-  async getTotalBridgeVolume(network, timeSince) {
+  async getTotalBridgeVolume(network: string, timeSince: number) {
     if (!timeSince) timeSince = getEpochMinus({ days: 1 });
     const endpoint = `${this.baseUrl}/api/bridge/getAvgBridgeVolumeAll/?network=${network}&timeSince=${timeSince}`;
     let totalBridgeVolumeAll = await http.get(endpoint);
@@ -102,21 +102,24 @@ export default class UmbriaApi {
    * @returns {obj[]}
    */
   async getAllApysAllNetworks() {
-    let allApys = [];
+    type ApiResponse = { [bridge in Bridge]?: { [asset: string]: string } };
+
+    let promises: Promise<ApiResponse>[] = [];
     for (let network of NETWORKS) {
-      allApys = [...allApys, this.getAPYAllBridgeRoutes(network.apiName)];
+      promises = [...promises, this.getAPYAllBridgeRoutes(network.apiName)];
     }
-    allApys = await Promise.all(allApys);
+
+    const allApys = await Promise.all(promises);
     let outputdata = [];
     let i = 0;
     for (let network of allApys) {
       for (let bridge in network) {
-        for (let asset in network[bridge]) {
+        for (let asset in network[bridge as Bridge]) {
           outputdata.push({
             network: NETWORKS[i].displayName,
-            bridge: BRIDGEDISPLAYNAMES[bridge],
+            bridge: BRIDGEDISPLAYNAMES[bridge as Bridge],
             asset,
-            apy: +network[bridge][asset],
+            apy: Number(network?.[bridge as Bridge]?.[asset]),
           });
         }
       }
@@ -132,7 +135,7 @@ export default class UmbriaApi {
  * @param {str} oldProp
  * @param {str} newProp
  */
-function swapProp(o, oldProp, newProp) {
+function swapProp(o: Record<string, any>, oldProp: string, newProp: string) {
   // don't do anything if the old prop is undefined
   if (!o || o[oldProp] == null) return o;
 
@@ -145,7 +148,7 @@ function swapProp(o, oldProp, newProp) {
 }
 
 /** Formats result from getAvgBridgeVolAll endpoint to align with standard formats */
-function formatBridgeVolData(data) {
+function formatBridgeVolData(data: Record<string, any>) {
   let formatted = data;
   formatted = swapProp(formatted, "ether", "ETH");
   formatted = swapProp(formatted, "ghost", "GHST");

@@ -5,6 +5,14 @@ import UmbriaApi from "../../logic/umbriaApi";
 import AllNetworksAllApys from "../../components/allNetworksAllApys";
 import TableAllApys from "../../components/TableAllApys";
 import BridgeVolumeAll from "../bridgeVolume/BridgeVolumeAll";
+
+type ApyData = {
+  network: string;
+  bridge: string;
+  asset: string;
+  apy: number;
+};
+
 /** Overview Dashboard Page
  *
  * Displays:
@@ -12,8 +20,8 @@ import BridgeVolumeAll from "../bridgeVolume/BridgeVolumeAll";
  * - Table of apys for each network from the UMBR Endpoint
  */
 function Overview() {
-  const [umbrPrice, setUmbrPrice] = useState("");
-  const [allNetworksAllApys, setAllNetworksAllApys] = useState([]);
+  const [umbrPrice, setUmbrPrice] = useState(NaN);
+  const [allNetworksAllApys, setAllNetworksAllApys] = useState<ApyData[]>([]);
   const coingecko = new CoinGecko();
 
   useEffect(() => {
