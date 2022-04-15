@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./bridgeVolumeAll.css";
 // import UmbriaApi from "../../logic/umbr";
 import umbria from "./bridgeVolumeLogic";
-import { getEpochMinus } from "../../logic/utils";
+import { getEpochMinus, padArray } from "../../logic/utils";
 import BridgeVolOverTimeChart from "./bridgeVolOverTime";
 import _, { capitalize } from "lodash";
 import { BridgeVolumeData } from "./types";
@@ -66,22 +66,18 @@ export default function BridgeVolumeAll({ showTitle = true }) {
 
   function bridgeDataToPlot() {
     if (!bridgeData.length) return;
-    console.log(bridgeData);
     let asset = selectedAsset;
     let plots: { data: number[]; name: string }[] = [];
-    console.log(bridgeData);
     for (let data of bridgeData.filter(
       (o) =>
         (!selectedNetwork || o.network === selectedNetwork) &&
         (!asset || o.asset === asset)
     )) {
-      plots = [
-        ...plots,
-        {
-          data: data.avgVolsUsd,
-          name: `${data.asset} (${data.network})`,
-        },
-      ];
+      data.avgVolsUsd = padArray(data.avgVolsUsd, 4, 0);
+      plots.push({
+        data: data.avgVolsUsd,
+        name: `${data.asset} (${data.network})`,
+      });
     }
     return plots;
   }

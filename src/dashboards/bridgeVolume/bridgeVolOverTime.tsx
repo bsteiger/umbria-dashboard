@@ -1,10 +1,18 @@
 import Chart from "react-apexcharts";
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
+import { ApexOptions } from "apexcharts";
+import { faTruckLoading } from "@fortawesome/free-solid-svg-icons";
 
-export default function lineChart({ data, title }) {
+interface LineChartProps {
+  data: any;
+  title: string;
+}
+
+export default function lineChart({ data, title }: LineChartProps) {
   const type = "line";
-  const defaultOptions = {
+  const defaultOptions: ApexOptions = {
+    noData: { text: "Loading..." },
     chart: {
       height: 350,
       zoom: {
@@ -36,15 +44,15 @@ export default function lineChart({ data, title }) {
     },
     yaxis: {
       labels: {
-        formatter: (value) => {
-          return value ? "$" + value.toLocaleString("en-US") : undefined;
+        formatter: (value: number) => {
+          return value ? "$" + value.toLocaleString("en-US") : "";
         },
       },
     },
   };
 
   const [series, setSeries] = useState([]);
-  const [options, setOptions] = useState(defaultOptions);
+  const [options, setOptions] = useState<ApexOptions>(defaultOptions);
 
   useEffect(() => {
     if (!data) return;
