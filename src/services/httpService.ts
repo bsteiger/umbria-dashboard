@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
-axios.interceptors.response.use(null, (error) => {
+axios.interceptors.response.use(undefined, (error) => {
   const expectedError =
     error.response &&
     error.response.status >= 400 &&
@@ -19,3 +19,5 @@ export default {
   delete: axios.delete,
   patch: axios.patch,
 };
+
+export interface HttpResponse extends AxiosResponse {}

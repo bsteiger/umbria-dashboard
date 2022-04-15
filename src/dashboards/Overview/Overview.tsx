@@ -5,13 +5,7 @@ import UmbriaApi from "../../logic/umbriaApi";
 import AllNetworksAllApys from "../../components/allNetworksAllApys";
 import TableAllApys from "../../components/TableAllApys";
 import BridgeVolumeAll from "../bridgeVolume/BridgeVolumeAll";
-
-type ApyData = {
-  network: string;
-  bridge: string;
-  asset: string;
-  apy: number;
-};
+import { ApyData } from "../../constants/types";
 
 /** Overview Dashboard Page
  *

@@ -5,13 +5,15 @@ import umbria from "./bridgeVolumeLogic";
 import { getEpochMinus } from "../../logic/utils";
 import BridgeVolOverTimeChart from "./bridgeVolOverTime";
 import _, { capitalize } from "lodash";
+import { BridgeVolumeData } from "./types";
+import { Network } from "../../constants/networks";
 
 export default function BridgeVolumeAll({ showTitle = true }) {
-  const [bridgeData, setBridgeData] = useState([]);
-  const [networks, setNetworks] = useState([]);
-  const [assets, setAssets] = useState([]);
-  const [selectedAsset, setSelectedAsset] = useState("");
-  const [selectedNetwork, setselectedNetwork] = useState("");
+  const [bridgeData, setBridgeData] = useState<BridgeVolumeData[]>([]);
+  const [networks, setNetworks] = useState<Network[]>([]);
+  const [assets, setAssets] = useState<string[]>([]);
+  const [selectedAsset, setSelectedAsset] = useState<string>("");
+  const [selectedNetwork, setSelectedNetwork] = useState<string>("");
 
   useEffect(() => {
     document.title = "UMBR Dash | Average Bridge Volume";
@@ -21,7 +23,6 @@ export default function BridgeVolumeAll({ showTitle = true }) {
     const getUmbrData = async () => {
       console.log("getUmbrData");
       setNetworks(await umbria.getNetworks());
-      if (selectedNetwork === "") setselectedNetwork(networks[0]);
       let bridgeData = await umbria.getAvgBridgeVolData();
       setBridgeData(bridgeData);
       // setAssets();
@@ -33,15 +34,16 @@ export default function BridgeVolumeAll({ showTitle = true }) {
     getAssetsFromBridgeData();
   }, [bridgeData]);
 
-  async function getAssetsFromBridgeData(dat) {
-    setAssets(Array(...new Set(bridgeData.map((o) => o.asset))));
+  async function getAssetsFromBridgeData() {
+    const assets = new Set(bridgeData.map((o) => o.asset));
+    setAssets([...assets]);
   }
 
-  function handleNetworkSelect(value) {
-    setselectedNetwork(value);
+  function handleNetworkSelect(value: string) {
+    setSelectedNetwork(value);
   }
 
-  function handleAssetSelect(value) {
+  function handleAssetSelect(value: string) {
     setSelectedAsset(value);
   }
 
@@ -55,8 +57,8 @@ export default function BridgeVolumeAll({ showTitle = true }) {
               : "Data for all networks"
           }
           data={bridgeDataToPlot()}
-          network={selectedNetwork}
-          asset={"MATIC"}
+          // network={selectedNetwork}
+          // asset={"MATIC"}
         />
       </div>
     );
@@ -66,7 +68,7 @@ export default function BridgeVolumeAll({ showTitle = true }) {
     if (!bridgeData.length) return;
     console.log(bridgeData);
     let asset = selectedAsset;
-    let plots = [];
+    let plots: { data: number[]; name: string }[] = [];
     console.log(bridgeData);
     for (let data of bridgeData.filter(
       (o) =>
@@ -108,8 +110,12 @@ export default function BridgeVolumeAll({ showTitle = true }) {
     </div>
   );
 }
-
-function Selector({ defaultText, items, onChange }) {
+interface SelectorProps {
+  defaultText: string;
+  items: { value: string; text: string }[];
+  onChange: CallableFunction;
+}
+function Selector({ defaultText, items, onChange }: SelectorProps) {
   return (
     <select
       onChange={(e) => {
@@ -118,9 +124,7 @@ function Selector({ defaultText, items, onChange }) {
       className="form-select"
       aria-label={defaultText}
     >
-      <option value={""} defaultValue={true}>
-        {defaultText}
-      </option>
+      <option value={""}>{defaultText}</option>
 
       {items.map((item) => (
         <option value={item.value} key={item.value}>
