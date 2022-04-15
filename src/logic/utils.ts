@@ -45,3 +45,8 @@ function milliseconds({ days = 0, hrs = 0, mins = 0, secs = 0 }) {
 export function convertFromWei(wei: number) {
   return wei * 10 ** -18;
 }
+
+/** Pads array to given length with any fill value. If len < arr.length, will truncate. */
+export function padArray(arr: any[], len: number, fill: any) {
+  return arr.concat(Array(len).fill(fill)).slice(0, len);
+}
