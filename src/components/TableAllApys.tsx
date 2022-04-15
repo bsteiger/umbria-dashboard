@@ -1,15 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { SortUpIcon, SortDownIcon } from "./icons";
-/** Table component containing all APYs for all Networks */
-function TableAllApys({ data }) {
-  const [sortKey, setSortKey] = useState("apy");
-  const [sortDirection, setSortDirection] = useState("desc");
-  const [sortedData, setSortedData] = useState(data);
+import { Bridge } from "../constants/networks";
+import _ from "lodash";
 
-  const headers = [
-    { text: "Asset", key: "asset", styles: {}, sortIconLocation: "right" },
-    { text: "Network", key: "network", styles: {}, sortIconLocation: "right" },
-    { text: "Bridge", key: "bridge", styles: {}, sortIconLocation: "right" },
+interface ApyData {
+  apy: number;
+  asset: string;
+  bridge: Bridge;
+  network: string;
+}
+type SortDirection = "asc" | "desc";
+type Props = { data: any };
+
+/** Table component containing all APYs for all Networks */
+function TableAllApys({ data }: Props) {
+  const [sortKey, setSortKey] = useState<string>("apy");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [sortedData, setSortedData] = useState<ApyData[]>(data);
+
+  const headers: {
+    text: string;
+    key: string;
+    sortIconLocation: "left" | "right";
+    styles?: React.CSSProperties;
+  }[] = [
+    { text: "Asset", key: "asset", sortIconLocation: "right" },
+    { text: "Network", key: "network", sortIconLocation: "right" },
+    { text: "Bridge", key: "bridge", sortIconLocation: "right" },
     {
       text: "APY",
       key: "apy",
@@ -18,7 +35,7 @@ function TableAllApys({ data }) {
     },
   ];
 
-  function handleSort(key) {
+  function handleSort(key: string) {
     if (key != sortKey) {
       setSortKey(key);
       setSortDirection("desc");
