@@ -13,7 +13,7 @@ export default function BridgeVolumeAll({ showTitle = true }) {
   const [networks, setNetworks] = useState<Network[]>([]);
   const [assets, setAssets] = useState<string[]>([]);
   const [selectedAsset, setSelectedAsset] = useState<string>("");
-  const [selectedNetwork, setselectedNetwork] = useState<string>("");
+  const [selectedNetwork, setSelectedNetwork] = useState<string>("");
 
   useEffect(() => {
     document.title = "UMBR Dash | Average Bridge Volume";
@@ -23,7 +23,6 @@ export default function BridgeVolumeAll({ showTitle = true }) {
     const getUmbrData = async () => {
       console.log("getUmbrData");
       setNetworks(await umbria.getNetworks());
-      if (selectedNetwork === "") setselectedNetwork(networks[0].apiName);
       let bridgeData = await umbria.getAvgBridgeVolData();
       setBridgeData(bridgeData);
       // setAssets();
@@ -41,7 +40,7 @@ export default function BridgeVolumeAll({ showTitle = true }) {
   }
 
   function handleNetworkSelect(value: string) {
-    setselectedNetwork(value);
+    setSelectedNetwork(value);
   }
 
   function handleAssetSelect(value: string) {
