@@ -1,4 +1,3 @@
-import "../../umbria.typedefinitions";
 import UmbriaApi from "../../logic/umbriaApi";
 import { getEpochMinus } from "../../logic/utils";
 import CoinGecko from "../../logic/coinGeckoApi";
