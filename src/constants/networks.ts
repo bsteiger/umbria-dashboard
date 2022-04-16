@@ -3,6 +3,7 @@ export const NATIVEADDRESSES = {
   matic: "0xMATIC",
   binancesmartchain: "0xBNB",
   avax: "0xAVAX",
+  arbitrum: "0xETH",
 };
 
 //Render Colors for Rechart
@@ -25,6 +26,24 @@ export const BRIDGES = [
 ] as const;
 
 export type Bridge = typeof BRIDGES[number];
+
+export const BRIDGEADDRESSES: { [B in Bridge]: string } & {
+  [address: string]: string;
+} = {
+  ethmatic: "0x18c6f86ee9f099defe10b4201e48b2ef53beabd0",
+  ethavax: "0x437fb1638036f25342b9e4835c11e0b7cd34495a",
+  ethbsc: "0x862f84a7cd54c8edf1afc98a7a676b1ea6a27df5",
+  ethfantom: "0x7f2f30cbc81a9c4ce3b8a08daf4ade7541633853",
+  etharbitrum: "0x53214b879101e7f204123b773bfa0bd0748e9b8d",
+};
+
+export function getBridgeFromAddress(address: string): Bridge | undefined {
+  const results = Object.entries(BRIDGEADDRESSES).filter(
+    (entry) => entry[1].toLowerCase() === address.toLowerCase()
+  ) as [Bridge, string][];
+  if (results.length == 0) return undefined;
+  return results[0][0];
+}
 
 export const BRIDGEDISPLAYNAMES: { [B in Bridge]: string } = {
   ethavax: "Ethereum ↔ Avalanche",
@@ -75,6 +94,7 @@ const NETWORKS: Network[] = [
     displayName: "Arbitrum",
     apiName: "arbitrum",
     bridges: ["etharbitrum"],
+    nativeAddress: NATIVEADDRESSES.arbitrum,
   },
 ];
 

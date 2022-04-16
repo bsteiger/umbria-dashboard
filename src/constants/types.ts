@@ -1,9 +1,18 @@
 /**
  * Interface for APY Table Data
  */
-export interface ApyData {
+export type ApyData = {
   apy: number;
   asset: string;
   bridge: string;
   network: string;
-}
+};
+
+export type TvlData = {
+  tvlUsd: number;
+  asset: string;
+  bridge: string;
+  network: string;
+};
+
+export type OverviewData = TvlData & ApyData;
