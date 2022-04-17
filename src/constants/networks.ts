@@ -21,7 +21,7 @@ export const BRIDGES = [
   "ethavax",
   "ethmatic",
   "ethbsc",
-  "ethfantom",
+  "ethftm",
   "etharbitrum",
 ] as const;
 
@@ -33,7 +33,7 @@ export const BRIDGEADDRESSES: { [B in Bridge]: string } & {
   ethmatic: "0x18c6f86ee9f099defe10b4201e48b2ef53beabd0",
   ethavax: "0x437fb1638036f25342b9e4835c11e0b7cd34495a",
   ethbsc: "0x862f84a7cd54c8edf1afc98a7a676b1ea6a27df5",
-  ethfantom: "0x7f2f30cbc81a9c4ce3b8a08daf4ade7541633853",
+  ethftm: "0x7f2f30cbc81a9c4ce3b8a08daf4ade7541633853",
   etharbitrum: "0x53214b879101e7f204123b773bfa0bd0748e9b8d",
 };
 
@@ -50,7 +50,7 @@ export const BRIDGEDISPLAYNAMES: { [B in Bridge]: string } = {
   ethmatic: "Ethereum ↔ Polygon",
   ethbsc: "Ethereum ↔ Binance Smart Chain",
   etharbitrum: "Ethereum ↔ Arbitrum",
-  ethfantom: "Ethereum ↔ Fantom",
+  ethftm: "Ethereum ↔ Fantom",
 };
 
 export type Network = {
@@ -65,7 +65,7 @@ const NETWORKS: Network[] = [
     displayName: "Ethereum",
     apiName: "ethereum",
     nativeAddress: NATIVEADDRESSES.ethereum,
-    bridges: ["etharbitrum", "ethavax", "ethbsc", "ethfantom", "ethmatic"],
+    bridges: ["etharbitrum", "ethavax", "ethbsc", "ethftm", "ethmatic"],
   },
   {
     displayName: "Polygon",
@@ -88,7 +88,7 @@ const NETWORKS: Network[] = [
   {
     displayName: "Fantom",
     apiName: "fantom",
-    bridges: ["ethfantom"],
+    bridges: ["ethftm"],
   },
   {
     displayName: "Arbitrum",
