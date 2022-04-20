@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-import UmbrPrice from "../../components/umbrprice";
+import { useState, useEffect } from "react";
 import CoinGecko from "../../logic/coinGeckoApi";
 import UmbriaApi from "../../logic/umbriaApi";
-import AllNetworksAllApys from "../../components/allNetworksAllApys";
 import TableAllApys from "../../components/TableAllApys";
 import BridgeVolumeAll from "../bridgeVolume/BridgeVolumeAll";
-import { ApyData } from "../../constants/types";
+import { OverviewData } from "../../constants/types";
 
 /** Overview Dashboard Page
  *
@@ -15,7 +13,7 @@ import { ApyData } from "../../constants/types";
  */
 function Overview() {
   const [umbrPrice, setUmbrPrice] = useState(NaN);
-  const [allNetworksAllApys, setAllNetworksAllApys] = useState<ApyData[]>([]);
+  const [overviewData, setOverviewData] = useState<OverviewData[]>([]);
   const coingecko = new CoinGecko();
 
   useEffect(() => {
@@ -29,13 +27,16 @@ function Overview() {
       console.log(`app.getCurrentUmbrPrice()`);
       setUmbrPrice(await coingecko.getPriceById("umbra-network"));
     }
-    async function getAllNetworksApys() {
-      let data = await umbriaApi.getAllApysAllNetworks();
+    async function getOverviewData() {
+      let apysPromise = umbriaApi.getAllApysAllNetworks();
+      let tvlsPromise = umbriaApi.getAllTvlsAllNetworks();
+      let [apys, tvls] = await Promise.all([apysPromise, tvlsPromise]);
+      let data = UmbriaApi.buildOverviewData(apys, tvls);
       data = data.filter((item) => item.network && item.asset && item.bridge);
-      setAllNetworksAllApys(data);
+      setOverviewData(data);
     }
     getCurrentUmbrPrice();
-    getAllNetworksApys();
+    getOverviewData();
   }, []);
 
   return (
@@ -58,7 +59,7 @@ function Overview() {
             <div className="card">
               <div className="card-body">
                 <h6 className="card-title">Umbria Narni Pool Current APY</h6>
-                <TableAllApys data={allNetworksAllApys}></TableAllApys>
+                <TableAllApys data={overviewData}></TableAllApys>
               </div>
             </div>
           </div>

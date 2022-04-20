@@ -1,6 +1,12 @@
-import NETWORKS, { BRIDGEDISPLAYNAMES, Bridge } from "../constants/networks";
+import NETWORKS, {
+  BRIDGEDISPLAYNAMES,
+  Bridge,
+  getBridgeFromAddress,
+} from "../constants/networks";
 import { convertFromWei, getEpochMinus } from "./utils";
 import httpService from "../services/httpService";
+import { ApyData, OverviewData, TvlData } from "../constants/types";
+import _ from "lodash";
 
 const http = {
   get: async (endpoint: string) => {
@@ -40,7 +46,14 @@ export default class UmbriaApi {
    * on a single network */
   async getTvlAll(network: string) {
     const endpoint = `${this.baseUrl}/api/pool/getTvlAll/?network=${network}`;
-    return await http.get(endpoint);
+    return (await http.get(endpoint)) as TvlAll;
+  }
+
+  /** Get the total value of locked liquidity currently provided for all assets
+   * on a single network */
+  async getTvlAllBridgeRoutes(network: string) {
+    const endpoint = `${this.baseUrl}/api/pool/getTvlAllBridgeRoutes/?network=${network}`;
+    return (await http.get(endpoint)) as TvlAllBridgeRoutes;
   }
 
   /** Check the availability of the api */
@@ -79,8 +92,7 @@ export default class UmbriaApi {
     const endpoint =
       `${this.baseUrl}/api/pool/getAPYAllBridgeRoutes/` +
       `?&network=${network}`;
-    const data = await http.get(endpoint);
-    return data;
+    return (await http.get(endpoint)) as ApyAllBridgeRoutes;
   }
 
   /**Get total bridge volume from timeSince to now for all
@@ -96,12 +108,61 @@ export default class UmbriaApi {
     return formatBridgeVolData(totalBridgeVolumeAll.result);
   }
 
-  /** Get All the Apys for All Networks using the getBridgeVolumeAll endpoint
-   *
-   * Formated to array of objects with the following keys: network,bridge,asset,apy
-   * @returns {obj[]}
-   */
-  async getAllApysAllNetworks() {
+  async getAllTvlsAllNetworks(): Promise<TvlData[]> {
+    let allTvlData: TvlData[] = [];
+    let promises: Promise<TvlAllBridgeRoutes>[] = [];
+    for (let network of NETWORKS) {
+      promises.push(this.getTvlAllBridgeRoutes(network.apiName));
+    }
+    let responses = await Promise.all(promises);
+    responses.map((response, i) => {
+      for (let bridgeAddress in response.assets) {
+        const bridge = getBridgeFromAddress(bridgeAddress);
+        for (let asset in response.assets[bridgeAddress]) {
+          if (bridge) {
+            allTvlData.push({
+              asset: asset,
+              bridge: bridge as Bridge,
+              network: NETWORKS[i],
+              tvlUsd: +response.assets[bridgeAddress][asset],
+            });
+          }
+        }
+      }
+    });
+    return allTvlData;
+  }
+
+  static buildOverviewData(apys: ApyData[], tvls: TvlData[]): OverviewData[] {
+    let overviewData: OverviewData[] = [];
+
+    apys.map(({ bridge, network, asset, apy }) => {
+      const tvlUsd = _.find(tvls, {
+        network: network,
+        bridge: bridge,
+        asset: asset,
+      })?.tvlUsd;
+      overviewData.push({ apy, asset, bridge, network, tvlUsd: tvlUsd || NaN });
+    });
+
+    tvls.map(({ bridge, network, asset, tvlUsd }) => {
+      const entry = _.find(overviewData, { network, asset, bridge });
+      if (entry && entry.tvlUsd) {
+        return;
+      }
+
+      if (entry && !entry.tvlUsd) {
+        entry.tvlUsd = tvlUsd;
+        return;
+      }
+
+      overviewData.push({ bridge, network, asset, tvlUsd, apy: NaN });
+    });
+    return overviewData;
+  }
+
+  /** Get All the Apys for All Networks using the getBridgeVolumeAll endpoint   */
+  async getAllApysAllNetworks(): Promise<ApyData[]> {
     type ApiResponse = { [bridge in Bridge]?: { [asset: string]: string } };
 
     let promises: Promise<ApiResponse>[] = [];
@@ -116,8 +177,8 @@ export default class UmbriaApi {
       for (let bridge in network) {
         for (let asset in network[bridge as Bridge]) {
           outputdata.push({
-            network: NETWORKS[i].displayName,
-            bridge: BRIDGEDISPLAYNAMES[bridge as Bridge],
+            network: NETWORKS[i],
+            bridge: bridge as Bridge,
             asset,
             apy: Number(network?.[bridge as Bridge]?.[asset]),
           });
@@ -129,12 +190,7 @@ export default class UmbriaApi {
   }
 }
 
-/** Swaps property name of an object
- *
- * @param {Object} o
- * @param {str} oldProp
- * @param {str} newProp
- */
+/** Swaps property name of an object */
 function swapProp(o: Record<string, any>, oldProp: string, newProp: string) {
   // don't do anything if the old prop is undefined
   if (!o || o[oldProp] == null) return o;
@@ -161,4 +217,24 @@ function formatBridgeVolData(data: Record<string, any>) {
     ([k, v]) => (formatted[k] = convertFromWei(+v))
   );
   return formatted;
+}
+
+//API Response Interfaces
+interface TvlAllBridgeRoutes {
+  error: string;
+  network: string;
+  totalValue: string;
+  assets: { [bridgeAddress: string]: { [asset: string]: string } };
+}
+interface TvlAll {
+  error: string;
+  network: string;
+  totalValue: string;
+  assets: {
+    [asset: string]: string;
+  };
+}
+
+interface ApyAllBridgeRoutes {
+  [bridge: string]: { [asset: string]: string };
 }

@@ -31,8 +31,6 @@ export default {
       }
     }
     let resolvedData = await Promise.all(promises);
-    console.log("resolved Data", resolvedData);
-    console.log("Temp Data", tempData);
     for (let i in tempData) {
       data[i] = {
         data: resolvedData[i],
