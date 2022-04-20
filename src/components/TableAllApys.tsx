@@ -53,56 +53,58 @@ function TableAllApys({ data }: Props) {
   }, [data, sortKey, sortDirection]);
 
   return (
-    <table className="table table-sm">
-      <thead>
-        <tr>
-          {headers.map((header) => (
-            <th
-              onClick={() => handleSort(header.key)}
-              key={header.key}
-              style={{ cursor: "pointer", ...header.styles }}
-              scope="col"
-            >
-              {header.key === sortKey &&
-                header.sortIconLocation === "left" &&
-                sortDirection === "asc" && <SortUpIcon />}
-              {header.key === sortKey &&
-                header.sortIconLocation === "left" &&
-                sortDirection === "desc" && <SortDownIcon />}
-              {header.text}
-              {header.key === sortKey &&
-                header.sortIconLocation === "right" &&
-                sortDirection === "asc" && <SortUpIcon />}
-              {header.key === sortKey &&
-                header.sortIconLocation === "right" &&
-                sortDirection === "desc" && <SortDownIcon />}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {sortedData &&
-          sortedData.map((entry) => {
-            return (
-              <tr key={entry.asset + entry.network.apiName + entry.bridge}>
-                <td>{entry.asset}</td>
-                <td>{entry.network.displayName}</td>
-                <td>{BRIDGEDISPLAYNAMES[entry.bridge]}</td>
-                <td style={{ textAlign: "right" }}>
-                  {entry.tvlUsd.toLocaleString("en-us", {
-                    maximumFractionDigits: 0,
-                    style: "currency",
-                    currency: "usd",
-                  })}
-                </td>
-                <td style={{ textAlign: "right" }}>{`${(
-                  100 * entry.apy
-                ).toFixed(2)}%`}</td>
-              </tr>
-            );
-          })}
-      </tbody>
-    </table>
+    <div className="table-responsive">
+      <table className="table table-sm">
+        <thead>
+          <tr>
+            {headers.map((header) => (
+              <th
+                onClick={() => handleSort(header.key)}
+                key={header.key}
+                style={{ cursor: "pointer", ...header.styles }}
+                scope="col"
+              >
+                {header.key === sortKey &&
+                  header.sortIconLocation === "left" &&
+                  sortDirection === "asc" && <SortUpIcon />}
+                {header.key === sortKey &&
+                  header.sortIconLocation === "left" &&
+                  sortDirection === "desc" && <SortDownIcon />}
+                {header.text}
+                {header.key === sortKey &&
+                  header.sortIconLocation === "right" &&
+                  sortDirection === "asc" && <SortUpIcon />}
+                {header.key === sortKey &&
+                  header.sortIconLocation === "right" &&
+                  sortDirection === "desc" && <SortDownIcon />}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {sortedData &&
+            sortedData.map((entry) => {
+              return (
+                <tr key={entry.asset + entry.network.apiName + entry.bridge}>
+                  <td>{entry.asset}</td>
+                  <td>{entry.network.displayName}</td>
+                  <td>{BRIDGEDISPLAYNAMES[entry.bridge]}</td>
+                  <td style={{ textAlign: "right" }}>
+                    {entry.tvlUsd.toLocaleString("en-us", {
+                      maximumFractionDigits: 0,
+                      style: "currency",
+                      currency: "usd",
+                    })}
+                  </td>
+                  <td style={{ textAlign: "right" }}>{`${(
+                    100 * entry.apy
+                  ).toFixed(2)}%`}</td>
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
