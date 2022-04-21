@@ -90,11 +90,13 @@ function TableAllApys({ data }: Props) {
                   <td>{entry.network.displayName}</td>
                   <td>{BRIDGEDISPLAYNAMES[entry.bridge]}</td>
                   <td style={{ textAlign: "right" }}>
-                    {entry.tvlUsd.toLocaleString("en-us", {
-                      maximumFractionDigits: 0,
-                      style: "currency",
-                      currency: "usd",
-                    })}
+                    {entry.tvlUsd
+                      ? entry.tvlUsd.toLocaleString("en-us", {
+                          maximumFractionDigits: 0,
+                          style: "currency",
+                          currency: "usd",
+                        })
+                      : "$ --"}
                   </td>
                   <td style={{ textAlign: "right" }}>{`${(
                     100 * entry.apy
