@@ -6,8 +6,20 @@ export const NATIVEADDRESSES = {
   arbitrum: "0xETH",
 };
 
+export const TOKENS = [
+  "MATIC",
+  "ETH",
+  "UMBR",
+  "GHST",
+  "USDT",
+  "USDC",
+  "WBTC",
+] as const;
+
+export type Token = typeof TOKENS[number];
+
 //Render Colors for Rechart
-export const COLORS = {
+export const COLORS: { [T in Token]: string } = {
   MATIC: "#9f72ea",
   ETH: "#626890",
   UMBR: "#272727",
@@ -22,7 +34,7 @@ export const BRIDGES = [
   "ethmatic",
   "ethbsc",
   "ethftm",
-  "etharbitrum",
+  "etharb",
 ] as const;
 
 export type Bridge = typeof BRIDGES[number];
@@ -34,7 +46,15 @@ export const BRIDGEADDRESSES: { [B in Bridge]: string } & {
   ethavax: "0x437fb1638036f25342b9e4835c11e0b7cd34495a",
   ethbsc: "0x862f84a7cd54c8edf1afc98a7a676b1ea6a27df5",
   ethftm: "0x7f2f30cbc81a9c4ce3b8a08daf4ade7541633853",
-  etharbitrum: "0x53214b879101e7f204123b773bfa0bd0748e9b8d",
+  etharb: "0x53214b879101e7f204123b773bfa0bd0748e9b8d",
+};
+
+export const TOKENSONBRIDGE: { [B in Bridge]: Token[] } = {
+  ethmatic: ["MATIC", "ETH", "UMBR", "GHST", "USDT", "USDC", "WBTC"],
+  ethavax: ["ETH"],
+  ethbsc: ["ETH"],
+  ethftm: ["ETH"],
+  etharb: ["ETH"],
 };
 
 export function getBridgeFromAddress(address: string): Bridge | undefined {
@@ -49,7 +69,7 @@ export const BRIDGEDISPLAYNAMES: { [B in Bridge]: string } = {
   ethavax: "Ethereum ↔ Avalanche",
   ethmatic: "Ethereum ↔ Polygon",
   ethbsc: "Ethereum ↔ Binance Smart Chain",
-  etharbitrum: "Ethereum ↔ Arbitrum",
+  etharb: "Ethereum ↔ Arbitrum",
   ethftm: "Ethereum ↔ Fantom",
 };
 
@@ -65,7 +85,7 @@ const NETWORKS: Network[] = [
     displayName: "Ethereum",
     apiName: "ethereum",
     nativeAddress: NATIVEADDRESSES.ethereum,
-    bridges: ["etharbitrum", "ethavax", "ethbsc", "ethftm", "ethmatic"],
+    bridges: ["etharb", "ethavax", "ethbsc", "ethftm", "ethmatic"],
   },
   {
     displayName: "Polygon",
@@ -93,7 +113,7 @@ const NETWORKS: Network[] = [
   {
     displayName: "Arbitrum",
     apiName: "arbitrum",
-    bridges: ["etharbitrum"],
+    bridges: ["etharb"],
     nativeAddress: NATIVEADDRESSES.arbitrum,
   },
 ];
