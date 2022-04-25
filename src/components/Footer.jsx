@@ -1,6 +1,5 @@
 import React from "react";
 import { GitHubIcon } from "./icons";
-import Link from "react-router-dom/Link";
 function Footer() {
   return (
     <React.Fragment>
