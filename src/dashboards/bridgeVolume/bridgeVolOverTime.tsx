@@ -1,15 +1,13 @@
 import Chart from "react-apexcharts";
 import React, { useEffect, useState } from "react";
-import _ from "lodash";
 import { ApexOptions } from "apexcharts";
-import { faTruckLoading } from "@fortawesome/free-solid-svg-icons";
 
 interface LineChartProps {
   data: any;
   title: string;
 }
 
-export default function lineChart({ data, title }: LineChartProps) {
+export default function LineChart({ data, title }: LineChartProps) {
   const type = "line";
   const defaultOptions: ApexOptions = {
     noData: { text: "Loading..." },
@@ -52,12 +50,12 @@ export default function lineChart({ data, title }: LineChartProps) {
   };
 
   const [series, setSeries] = useState([]);
-  const [options, setOptions] = useState<ApexOptions>(defaultOptions);
+  const [options] = useState<ApexOptions>(defaultOptions);
 
   useEffect(() => {
     if (!data) return;
     setSeries(data ? data : []);
-  }, []);
+  }, [data]);
 
   return (
     <Chart

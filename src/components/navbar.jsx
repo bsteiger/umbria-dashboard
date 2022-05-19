@@ -1,9 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../UmbriaPretty.webp";
-import styles from "./navbar.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
+import { Web3Button } from "./Web3Button";
 export default function NavBar() {
   const navLinks = [
     { text: "Overview", route: "/" },
@@ -34,6 +32,7 @@ export default function NavBar() {
           className="nav-link"
           href={navLink.href}
           target={navLink.newWindow ? "_blank" : ""}
+          rel="noreferrer"
         >
           {navLink.text}
         </a>
@@ -52,6 +51,7 @@ export default function NavBar() {
           navLink.route ? renderNavLinkLi(navLink) : renderExtNavLinkLi(navLink)
         )}
       </ul>
+      <Web3Button></Web3Button>
     </nav>
   );
 }

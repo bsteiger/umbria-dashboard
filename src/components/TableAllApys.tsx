@@ -30,7 +30,7 @@ function TableAllApys({ data }: Props) {
   ];
 
   function handleSort(key: string) {
-    if (key != sortKey) {
+    if (key !== sortKey) {
       setSortKey(key);
       setSortDirection("desc");
     } else {

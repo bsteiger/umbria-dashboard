@@ -68,7 +68,7 @@ function UmbrPools() {
     for (let key of _.keys(initialUmbrPoolData.ethereum)) {
       getUmbrData(key);
     }
-  }, []);
+  }, [umbrPoolData]);
 
   const buttons = [
     { text: "30d", value: 30 },

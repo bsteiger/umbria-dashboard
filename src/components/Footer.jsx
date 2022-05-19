@@ -10,6 +10,7 @@ function Footer() {
             <a
               style={{ textDecoration: "none" }}
               target="_blank"
+              rel="noreferrer"
               href="https://github.com/bsteiger/umbria-dashboard"
             >
               <span className="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">

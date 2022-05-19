@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./bridgeVolumeAll.css";
-// import UmbriaApi from "../../logic/umbr";
 import umbria from "./bridgeVolumeLogic";
-import { getEpochMinus, padArray } from "../../logic/utils";
+import { padArray } from "../../logic/utils";
 import BridgeVolOverTimeChart from "./bridgeVolOverTime";
-import _, { capitalize } from "lodash";
+import { capitalize } from "lodash";
 import { BridgeVolumeData } from "./types";
 import { Network } from "../../constants/networks";
 
@@ -25,19 +24,17 @@ export default function BridgeVolumeAll({ showTitle = true }) {
       setNetworks(await umbria.getNetworks());
       let bridgeData = await umbria.getAvgBridgeVolData();
       setBridgeData(bridgeData);
-      // setAssets();
     };
     getUmbrData();
   }, []);
 
   useEffect(() => {
+    const getAssetsFromBridgeData = async () => {
+      const assets = new Set(bridgeData.map((o) => o.asset));
+      setAssets([...assets]);
+    };
     getAssetsFromBridgeData();
   }, [bridgeData]);
-
-  async function getAssetsFromBridgeData() {
-    const assets = new Set(bridgeData.map((o) => o.asset));
-    setAssets([...assets]);
-  }
 
   function handleNetworkSelect(value: string) {
     setSelectedNetwork(value);

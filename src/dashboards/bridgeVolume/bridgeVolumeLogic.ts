@@ -1,7 +1,6 @@
 import UmbriaApi from "../../logic/umbriaApi";
 import { getEpochMinus } from "../../logic/utils";
 import CoinGecko from "../../logic/coinGeckoApi";
-import _ from "lodash";
 import promiseAllProperties from "promise-all-properties";
 import { BridgeVolumeData } from "./types";
 
@@ -11,7 +10,7 @@ export interface BridgeData {
   day: number;
   network: string;
 }
-export default {
+const umbria = {
   /** Gets average bridge volume for the past 30, 14, 7, and 1 days
    *
    *
@@ -51,7 +50,7 @@ export default {
 let prices: { [symbol: string]: number } = {};
 const coingecko = new CoinGecko();
 
-async function getPrice(symbol: string) {
+export async function getPrice(symbol: string) {
   if (prices[symbol]) {
     return prices[symbol];
   }
@@ -96,17 +95,20 @@ async function formatBridgeData(data: BridgeData[]) {
         (o) => o.network === network && o.asset === asset
       );
       if (!entry.length) continue;
+      const price = prices[asset];
       newEntries.push({
         network,
         asset,
-        price: prices[asset],
+        price,
         days: entry.map((o) => `${o.day}d`),
         totalVols: entry.map((o) => o.total),
-        totalVolsUsd: entry.map((o) => o.total * prices[asset]),
+        totalVolsUsd: entry.map((o) => o.total * price),
         avgVols: entry.map((o) => o.avg),
-        avgVolsUsd: entry.map((o) => o.avg * prices[asset]),
+        avgVolsUsd: entry.map((o) => o.avg * price),
       });
     }
   }
   return newEntries;
 }
+
+export default umbria;

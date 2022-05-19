@@ -12,7 +12,7 @@ axios.interceptors.response.use(undefined, (error) => {
   return Promise.reject(error);
 });
 
-export default {
+const httpService = {
   get: axios.get,
   post: axios.post,
   put: axios.put,
@@ -20,4 +20,5 @@ export default {
   patch: axios.patch,
 };
 
+export default httpService;
 export interface HttpResponse extends AxiosResponse {}
