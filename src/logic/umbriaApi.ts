@@ -118,7 +118,7 @@ export default class UmbriaApi {
           outputdata.push({
             network: NETWORKS[i].displayName,
             bridge: BRIDGEDISPLAYNAMES[bridge as Bridge],
-            asset,
+            asset: asset.toUpperCase(),
             apy: Number(network?.[bridge as Bridge]?.[asset]),
           });
         }
